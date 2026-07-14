@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calc-TIP GROK v5f</title>
+    <title>Calc-TIP GROK v5c</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#3182ce">
     <style>
-        /* (Same styles as before - unchanged for brevity) */
+        /* Modern Design System Tokens & Global Theming Core */
         :root {
             --bg-body: #f4f6f9;
             --bg-card: #ffffff;
@@ -71,6 +71,7 @@
             max-width: 960px;
             width: 100%;
             align-items: flex-start;
+            transition: var(--transition);
         }
 
         .calculator-card, .history-card {
@@ -79,6 +80,7 @@
             border-radius: var(--radius-main);
             box-shadow: var(--shadow);
             box-sizing: border-box;
+            transition: var(--transition);
         }
 
         .calculator-card { flex: 1.2; }
@@ -98,14 +100,38 @@
         h3 { font-size: 18px; }
 
         .form-group { margin-bottom: 22px; }
-        .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        label { font-weight: 600; color: var(--text-secondary); font-size: 14px; }
+        
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
 
-        .input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
-        .prefix, .suffix { position: absolute; color: var(--text-muted); font-weight: 500; pointer-events: none; z-index: 2; font-size: 16px; }
+        label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .prefix, .suffix {
+            position: absolute;
+            color: var(--text-muted);
+            font-weight: 500;
+            pointer-events: none;
+            z-index: 2;
+            font-size: 16px;
+        }
         .prefix { left: 14px; }
         .suffix { right: 14px; }
-
+        
         input[type="number"], textarea {
             width: 100%;
             padding: 12px;
@@ -115,10 +141,19 @@
             border-radius: var(--radius-inner);
             font-size: 16px;
             box-sizing: border-box;
+            transition: var(--transition);
         }
+        textarea { resize: none; font-family: inherit; }
         input.has-prefix { padding-left: 30px; }
         input.has-suffix { padding-right: 36px; }
+        
+        input:focus-visible, textarea:focus-visible, button:focus-visible {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: var(--focus-ring);
+        }
 
+        /* Dual-Stepper Component Architecture Styles */
         .stepper-container {
             display: flex;
             align-items: center;
@@ -127,7 +162,28 @@
             border-radius: var(--radius-inner);
             background: var(--bg-input);
             overflow: hidden;
+            transition: var(--transition);
         }
+        .stepper-container:focus-within {
+            border-color: var(--brand-primary);
+            box-shadow: var(--focus-ring);
+        }
+        .stepper-container input {
+            border: none !important;
+            border-radius: 0 !important;
+            text-align: center;
+            box-shadow: none !important;
+            padding: 12px 14px;
+        }
+        .step-btn-group {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-secondary);
+            flex-shrink: 0;
+        }
+        .step-btn-group.left-group { border-right: 1px solid var(--border-color); }
+        .step-btn-group.right-group { border-left: 1px solid var(--border-color); }
+        
         .step-btn {
             display: flex;
             align-items: center;
@@ -137,9 +193,15 @@
             cursor: pointer;
             font-size: 10px;
             color: var(--text-secondary);
+            user-select: none;
             background: var(--bg-secondary);
             border: none;
+            transition: background var(--transition);
         }
+        .step-btn:hover { background: var(--bg-secondary-hover); }
+        .step-btn:active { background: var(--bg-secondary-active); }
+        .step-btn.up { border-bottom: 1px solid var(--border-color); }
+        /* Shortcut UI Controls Styles */
         .btn-shortcut-group { display: flex; gap: 8px; margin-top: 8px; }
         .btn-shortcut {
             background-color: var(--bg-secondary);
@@ -147,175 +209,649 @@
             color: var(--text-secondary);
             padding: 8px;
             font-size: 13px;
+            font-weight: 500;
             border-radius: 4px;
             cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-shortcut:hover {
+            background-color: var(--bg-secondary-hover);
+            border-color: var(--text-muted);
         }
 
+        /* Results Matrix Grid Display Styles */
         .results-section {
             background-color: var(--bg-results);
             border-radius: var(--radius-inner);
             padding: 18px;
             margin-top: 24px;
             border: 1px solid var(--border-results);
+            transition: var(--transition);
         }
-        .result-row { display: flex; justify-content: space-between; margin-bottom: 12px; }
-        .result-row.total { border-top: 2px dashed var(--border-color); padding-top: 14px; margin-top: 14px; font-size: 22px; font-weight: 800; }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+        .result-row.highlight { font-weight: 600; color: var(--brand-highlight); }
+        .result-row.total {
+            border-top: 2px dashed var(--border-color);
+            padding-top: 14px;
+            margin-top: 14px;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .hint { font-size: 12px; color: var(--text-muted); margin-top: 5px; display: block; }
+        
+        /* Layout Actions & Global Controls Styles */
+        .action-buttons { display: flex; gap: 14px; margin-top: 24px; }
+        .btn-main {
+            flex: 1;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: var(--radius-inner);
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+        }
+        .btn-save { background: var(--brand-primary); color: white; }
+        .btn-save:hover { background: var(--brand-primary-hover); }
+        .btn-print { background: var(--text-secondary); color: var(--bg-card); }
+        .btn-print:hover { background: var(--text-primary); }
+
+        .btn-theme-toggle {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 6px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+        .btn-theme-toggle:hover { background: var(--bg-secondary); }
+
+        /* History Storage UI Styling Elements */
+        .history-list { max-height: 380px; overflow-y: auto; margin-top: 12px; flex-grow: 1; padding-right: 4px; }
+        .history-item {
+            background: var(--bg-results);
+            border: 1px solid var(--border-results);
+            border-radius: var(--radius-inner);
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            position: relative;
+            animation: fadeIn 0.25s ease-out;
+        }
+        .history-item-header { display: flex; justify-content: space-between; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+        .history-item-notes { font-style: italic; color: var(--text-muted); margin-top: 6px; word-break: break-word; white-space: pre-wrap; border-top: 1px solid var(--border-results); padding-top: 4px; }
+        .empty-history { color: var(--text-muted); text-align: center; font-style: italic; padding: 30px 0; }
+        
+        .history-management { display: flex; gap: 8px; margin-top: 16px; border-top: 1px solid var(--border-results); padding-top: 16px; }
+        .btn-history-ctrl { flex: 1; padding: 8px; font-size: 12px; font-weight: 600; border-radius: 4px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-secondary); transition: var(--transition); }
+        .btn-history-ctrl:hover { background: var(--bg-secondary-hover); }
+        .btn-clear-all { border-color: var(--brand-danger); color: var(--brand-danger); background: transparent; }
+        .btn-clear-all:hover { background: var(--brand-danger); color: white; }
+
+        /* Accessible Notification Toast Platform CSS */
+        .toast-container { position: fixed; bottom: 24px; left: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: #2d3748; color: #fff; padding: 12px 20px; border-radius: var(--radius-inner); box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 14px; font-weight: 500; display: flex; align-items: center; transform: translateY(100px); opacity: 0; animation: slideIn 0.3s forwards, fadeOutToast 0.3s forwards 3.7s; pointer-events: none; }
+        [data-theme="dark"] .toast { background: #edf2f7; color: #1a202c; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOutToast { to { opacity: 0; transform: translateY(-20px); } }
+
+        /* Media Breakpoint Engineering Adjustments */
+        @media (max-width: 768px) {
+            .container { flex-direction: column; align-items: stretch; padding: 10px; }
+            .history-card { max-width: 100%; }
+            .history-toggle-trigger { display: flex !important; width: 100%; justify-content: space-between; align-items: center; background: none; border: none; padding: 0; color: var(--text-primary); cursor: pointer; font-size: 18px; font-weight: 600; }
+            .history-toggle-trigger::after { content: '▼'; font-size: 12px; transition: transform var(--transition); }
+            .history-card.collapsed .history-toggle-trigger::after { transform: rotate(-90deg); }
+            .history-card.collapsed .history-list, .history-card.collapsed .history-management { display: none; }
+        }
+        
+        .history-toggle-trigger { display: none; }
+
+        /* Dedicated System Media-Print Core Overrides */
+        @media print {
+            body { background: white !important; color: black !important; padding: 0; }
+            .history-card, .btn-shortcut-group, .action-buttons, .btn-theme-toggle, .step-btn-group, .hint { display: none !important; }
+            .calculator-card { box-shadow: none !important; padding: 0 !important; max-width: 100% !important; }
+            .stepper-container { border: none !important; }
+            input, textarea { border: none !important; padding: 6px 0 !important; background: transparent !important; color: black !important; }
+            .suffix { right: 0 !important; }
+            .results-section { border: 1px solid #000 !important; background: transparent !important; }
+            .result-row { color: black !important; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container" role="main">
+    <!-- Main Interactive Form Card Block -->
     <div class="calculator-card">
         <div class="header-row">
             <h2>Bill Calculator</h2>
-            <button id="themeToggle" class="btn-theme-toggle">🌓</button>
+            <button id="themeToggle" class="btn-theme-toggle" aria-label="Toggle dark and light application theme" title="Toggle Display Theme">🌓</button>
         </div>
-
-        <!-- Meal Cost -->
+        
+        <!-- Base Input Component Group: Meal Cost -->
         <div class="form-group">
-            <div class="label-row"><label for="mealCost">Meal Cost</label></div>
+            <div class="label-row">
+                <label for="mealCost">Meal Cost</label>
+            </div>
             <div class="input-wrapper">
-                <span class="prefix">$</span>
-                <input type="number" id="mealCost" class="has-prefix" step="0.01" min="0" placeholder="0.00">
+                <span class="prefix" aria-hidden="true">$</span>
+                <input type="number" id="mealCost" class="has-prefix" step="0.01" min="0" placeholder="0.00" aria-required="true">
             </div>
         </div>
 
-        <!-- Surcharge Rate -->
+        <!-- Custom Input Component Group: Credit Card Surcharge Rate -->
         <div class="form-group">
-            <div class="label-row"><label for="surchargeRate">Credit Card Surcharge Rate</label></div>
-            <div class="stepper-container">
-                <div class="step-btn-group">
-                    <button class="step-btn" data-id="surchargeRate" data-amount="1">▲</button>
-                    <button class="step-btn" data-id="surchargeRate" data-amount="-1">▼</button>
+            <div class="label-row">
+                <label id="surchargeLabel" for="surchargeRate">Credit Card Surcharge Rate</label>
+            </div>
+            <div class="stepper-container" role="group" aria-labelledby="surchargeLabel">
+                <!-- Left Stepper Action Controls (Whole Numbers) -->
+                <div class="step-btn-group left-group">
+                    <button class="step-btn up" onclick="adjustValue('surchargeRate', 1)" aria-label="Increase surcharge rate by one percent">▲</button>
+                    <button class="step-btn down" onclick="adjustValue('surchargeRate', -1)" aria-label="Decrease surcharge rate by one percent">▼</button>
                 </div>
-                <div class="input-wrapper" style="flex:1">
+                <div class="input-wrapper" style="flex: 1;">
                     <input type="number" id="surchargeRate" class="has-suffix" step="0.1" min="0" value="0.0">
-                    <span class="suffix">%</span>
+                    <span class="suffix" aria-hidden="true">%</span>
                 </div>
-                <div class="step-btn-group">
-                    <button class="step-btn" data-id="surchargeRate" data-amount="0.1">▲</button>
-                    <button class="step-btn" data-id="surchargeRate" data-amount="-0.1">▼</button>
+                <!-- Right Stepper Action Controls (Fractional Numbers) -->
+                <div class="step-btn-group right-group">
+                    <button class="step-btn up" onclick="adjustValue('surchargeRate', 0.1)" aria-label="Increase surcharge rate by one tenth percent">▲</button>
+                    <button class="step-btn down" onclick="adjustValue('surchargeRate', -0.1)" aria-label="Decrease surcharge rate by one tenth percent">▼</button>
                 </div>
             </div>
             <div class="btn-shortcut-group">
-                <button class="btn-shortcut" data-id="surchargeRate" data-val="1">1%</button>
-                <button class="btn-shortcut" data-id="surchargeRate" data-val="2">2%</button>
-                <button class="btn-shortcut" data-id="surchargeRate" data-val="3">3%</button>
+                <button class="btn-shortcut" onclick="setPreset('surchargeRate', 1)" aria-label="Set credit card surcharge rate preset to one percent">1%</button>
+                <button class="btn-shortcut" onclick="setPreset('surchargeRate', 2)" aria-label="Set credit card surcharge rate preset to two percent">2%</button>
+                <button class="btn-shortcut" onclick="setPreset('surchargeRate', 3)" aria-label="Set credit card surcharge rate preset to three percent">3%</button>
             </div>
         </div>
 
-        <!-- Tip Percentage -->
+        <!-- Custom Input Component Group: Desired Tip Target -->
         <div class="form-group">
-            <div class="label-row"><label for="desiredTipPct">Desired Tip Percentage</label></div>
-            <div class="stepper-container">
-                <div class="step-btn-group">
-                    <button class="step-btn" data-id="desiredTipPct" data-amount="1">▲</button>
-                    <button class="step-btn" data-id="desiredTipPct" data-amount="-1">▼</button>
+            <div class="label-row">
+                <label id="tipLabel" for="desiredTipPct">Desired Tip Percentage</label>
+            </div>
+            <div class="stepper-container" role="group" aria-labelledby="tipLabel">
+                <!-- Left Stepper Action Controls (Whole Numbers) -->
+                <div class="step-btn-group left-group">
+                    <button class="step-btn up" onclick="adjustValue('desiredTipPct', 1)" aria-label="Increase tip rate by one percent">▲</button>
+                    <button class="step-btn down" onclick="adjustValue('desiredTipPct', -1)" aria-label="Decrease tip rate by one percent">▼</button>
                 </div>
-                <div class="input-wrapper" style="flex:1">
+                <div class="input-wrapper" style="flex: 1;">
                     <input type="number" id="desiredTipPct" class="has-suffix" step="0.1" min="0" value="18.0">
-                    <span class="suffix">%</span>
+                    <span class="suffix" aria-hidden="true">%</span>
                 </div>
-                <div class="step-btn-group">
-                    <button class="step-btn" data-id="desiredTipPct" data-amount="0.1">▲</button>
-                    <button class="step-btn" data-id="desiredTipPct" data-amount="-0.1">▼</button>
+                <!-- Right Stepper Action Controls (Fractional Numbers) -->
+                <div class="step-btn-group right-group">
+                    <button class="step-btn up" onclick="adjustValue('desiredTipPct', 0.1)" aria-label="Increase tip rate by one tenth percent">▲</button>
+                    <button class="step-btn down" onclick="adjustValue('desiredTipPct', -0.1)" aria-label="Decrease tip rate by one tenth percent">▼</button>
                 </div>
             </div>
             <small class="hint">Will be adjusted up/down automatically to target an even whole-dollar bill total</small>
             <div class="btn-shortcut-group">
-                <button class="btn-shortcut" data-id="desiredTipPct" data-val="15">15%</button>
-                <button class="btn-shortcut" data-id="desiredTipPct" data-val="18">18%</button>
-                <button class="btn-shortcut" data-id="desiredTipPct" data-val="20">20%</button>
+                <button class="btn-shortcut" onclick="setPreset('desiredTipPct', 15)" aria-label="Set target tip rate preset to fifteen percent">15%</button>
+                <button class="btn-shortcut" onclick="setPreset('desiredTipPct', 18)" aria-label="Set target tip rate preset to eighteen percent">18%</button>
+                <button class="btn-shortcut" onclick="setPreset('desiredTipPct', 20)" aria-label="Set target tip rate preset to twenty percent">20%</button>
             </div>
         </div>
 
-        <!-- Tip Override -->
+        <!-- NEW COMPONENT: Tip Override Minimum Dollar Guardrail -->
         <div class="form-group">
-            <div class="label-row"><label for="tipOverride">Tip Override (Minimum $)</label></div>
+            <div class="label-row">
+                <label for="tipOverride">Tip Override (Minimum Dollar Amount)</label>
+            </div>
             <div class="input-wrapper">
-                <span class="prefix">$</span>
-                <input type="number" id="tipOverride" class="has-prefix" step="1" min="0" value="0">
+                <span class="prefix" aria-hidden="true">$</span>
+                <input type="number" id="tipOverride" class="has-prefix" step="1" min="0" value="0" placeholder="0" aria-label="Minimum flat tip cash floor override">
             </div>
+            <small class="hint">Ensures tip never drops below this absolute floor amount during split-rounding</small>
         </div>
 
-        <!-- Party Size -->
+        <!-- Custom Input Component Group: Party Size Splitting -->
         <div class="form-group">
-            <div class="label-row"><label for="partySize">Number of People (Split)</label></div>
-            <div class="stepper-container">
-                <div class="step-btn-group"><button class="step-btn" data-id="partySize" data-amount="-1" style="height:46px">▼</button></div>
-                <div class="input-wrapper" style="flex:1"><input type="number" id="partySize" step="1" min="1" value="1"></div>
-                <div class="step-btn-group"><button class="step-btn" data-id="partySize" data-amount="1" style="height:46px">▲</button></div>
+            <div class="label-row">
+                <label id="splitLabel" for="partySize">Number of People (Split)</label>
+            </div>
+            <div class="stepper-container" role="group" aria-labelledby="splitLabel">
+                <div class="step-btn-group left-group">
+                    <button class="step-btn up" style="height: 46px;" onclick="adjustValue('partySize', -1)" aria-label="Decrease split count by one person">▼</button>
+                </div>
+                <div class="input-wrapper" style="flex: 1;">
+                    <input type="number" id="partySize" step="1" min="1" value="1" aria-required="true">
+                </div>
+                <div class="step-btn-group right-group">
+                    <button class="step-btn up" style="height: 46px;" onclick="adjustValue('partySize', 1)" aria-label="Increase split count by one person">▲</button>
+                </div>
             </div>
         </div>
 
+        <!-- Freeform Descriptive Data Log Input Field -->
         <div class="form-group">
             <label for="billNotes">Notes</label>
-            <textarea id="billNotes" rows="4" placeholder="Restaurant name, notes..."></textarea>
+            <textarea id="billNotes" rows="5" placeholder="Enter dining notes, restaurant name, or split details..."></textarea>
         </div>
 
+        <!-- Computational Aggregations Output Metrics Panel -->
         <div class="results-section" aria-live="polite">
-            <div class="result-row"><span>Base Meal Cost:</span><span id="outMeal">$0.00</span></div>
-            <div class="result-row"><span>CC Surcharge:</span><span id="outSurcharge">$0.00</span></div>
-            <div class="result-row"><span>Adjusted Tip:</span><span id="outTip">$0.00</span></div>
-            <div class="result-row"><span>Effective Tip Rate:</span><span id="outEffectiveTip">0.0%</span></div>
-            <div class="result-row total"><span>Even Total Bill:</span><span id="outTotal">$0.00</span></div>
-            <div id="splitTotalRow" class="result-row" style="display:none;"><span>Per Person:</span><span id="outSplitShare">$0.00</span></div>
+            <div class="result-row">
+                <span>Base Meal Cost:</span>
+                <span id="outMeal">$0.00</span>
+            </div>
+            <div class="result-row">
+                <span>CC Surcharge Amount:</span>
+                <span id="outSurcharge">$0.00</span>
+            </div>
+            <div class="result-row highlight">
+                <span>Adjusted Tip Amount:</span>
+                <span id="outTip">$0.00</span>
+            </div>
+            <div class="result-row">
+                <span>Effective Tip Rate:</span>
+                <span id="outEffectiveTip">0.0%</span>
+            </div>
+            <div class="result-row total">
+                <span>Even Total Bill:</span>
+                <span id="outTotal">$0.00</span>
+            </div>
+            <!-- Fractional Dividend Splitting Breakdown Entry Row -->
+            <div id="splitTotalRow" class="result-row highlight" style="font-size: 17px; margin-top: 10px; border-top: 1px solid var(--border-results); padding-top: 10px; display: none;">
+                <span>Per-Person Share:</span>
+                <span id="outSplitShare">$0.00</span>
+            </div>
         </div>
 
-        <div class="action-buttons" style="margin-top:24px;display:flex;gap:12px;">
-            <button onclick="saveToHistory()" style="flex:1;padding:14px;background:#3182ce;color:white;border:none;border-radius:6px;">Save History</button>
-            <button onclick="clearMainForm()" style="flex:1;padding:14px;background:#e53e3e;color:white;border:none;border-radius:6px;">Clear</button>
-            <button onclick="window.print()" style="flex:1;padding:14px;background:#4a5568;color:white;border:none;border-radius:6px;">Print</button>
+        <!-- Process Actions Layout Wrapper (Clear Button Included) -->
+        <div class="action-buttons">
+            <button class="btn-main btn-save" onclick="saveToHistory()" aria-label="Commit current ledger metrics to regional persistent vault">Save History</button>
+            <button class="btn-main" style="background-color: var(--brand-danger); color: white;" onclick="clearMainForm()" aria-label="Clear all current inputs and reset workspace">Clear</button>
+            <button class="btn-main btn-print" onclick="window.print()" aria-label="Trigger local terminal graphics device system driver">Print / PDF</button>
         </div>
     </div>
 
-    <!-- History panel omitted for brevity - same as before -->
+    <!-- Right Side History Log Vault Sidebar Panel -->
+    <div class="history-card" id="historyCard" aria-label="Persistent transaction registry logs data storage panel">
+        <button class="history-toggle-trigger" id="historyToggle" aria-expanded="true" aria-controls="historyList">
+            <h3>Saved History</h3>
+        </button>
+        <div id="historyList" class="history-list">
+            <div class="empty-history" role="status">No records found within current workspace profile.</div>
+        </div>
+        <!-- Storage Format Transformation Utilities Group -->
+        <div class="history-management">
+            <button class="btn-history-ctrl" onclick="exportData('csv')" title="Download raw comma separated data matrix log file">Export CSV</button>
+            <button class="btn-history-ctrl" onclick="exportData('json')" title="Download Javascript Object notation tree ledger schema payload">Export JSON</button>
+            <button class="btn-history-ctrl btn-clear-all" onclick="clearAllHistory()" title="Permanently vaporize all storage profile table data arrays">Clear All</button>
+        </div>
+    </div>
 </div>
 
-<div class="toast-container" id="toastContainer"></div>
-
+<div class="toast-container" id="toastContainer" aria-live="assertive" aria-atomic="true"></div>
 <script>
-    // ... (Full robust script from previous version with extra mobile handlers)
+    // Component Registry Selector Mapping
+    const mealCostInput = document.getElementById('mealCost');
+    const surchargeRateInput = document.getElementById('surchargeRate');
+    const desiredTipPctInput = document.getElementById('desiredTipPct');
+    const tipOverrideInput = document.getElementById('tipOverride');
+    const partySizeInput = document.getElementById('partySize');
+    const billNotesInput = document.getElementById('billNotes');
 
-    const inputs = ['mealCost','surchargeRate','desiredTipPct','tipOverride','partySize'].map(id => document.getElementById(id));
+    const outMeal = document.getElementById('outMeal');
+    const outSurcharge = document.getElementById('outSurcharge');
+    const outTip = document.getElementById('outTip');
+    const outEffectiveTip = document.getElementById('outEffectiveTip');
+    const outTotal = document.getElementById('outTotal');
+    const outSplitShare = document.getElementById('outSplitShare');
+    const splitTotalRow = document.getElementById('splitTotalRow');
+    
+    const historyList = document.getElementById('historyList');
+    const historyCard = document.getElementById('historyCard');
+    const historyToggle = document.getElementById('historyToggle');
+    const themeToggle = document.getElementById('themeToggle');
+    const toastContainer = document.getElementById('toastContainer');
 
+    // Functional State Domain Constants
+    const INPUT_CAP_MAX = 1000000;
+
+    // --- Architecture Upgraded v5c: Dual-Mode Tip Protection Engine ---
+    function computeBillMetrics(mealCost, surchargeRate, desiredTipPct, tipOverrideAmt = 0, partySize = 1) {
+        if (mealCost <= 0) {
+            return { mealCost: 0, surchargeAmt: 0, adjustedTipAmt: 0, effectiveTipPct: 0, evenTotal: 0, splitShare: 0 };
+        }
+
+        const surchargeMult = 1 + (surchargeRate / 100);
+        
+        // 1. Establish the absolute baseline tip target from percentage
+        const pctTipAmt = mealCost * (desiredTipPct / 100);
+        
+        // 2. Determine base tip target by choosing the greater of % vs flat override floor
+        const targetBaseTipAmt = Math.max(pctTipAmt, tipOverrideAmt);
+        
+        // 3. Compute the raw unrounded target grand total
+        const rawTotal = (mealCost + targetBaseTipAmt) * surchargeMult;
+        
+        let splitShare = 0;
+        let forceRoundUp = false;
+
+        if (partySize <= 1) {
+            // MODE A: Standard Individual Rounding Track
+            let evenTotalTrial = Math.round(rawTotal);
+            let checkTip = parseFloat(((evenTotalTrial / surchargeMult) - mealCost).toFixed(2));
+            let checkEffectivePct = mealCost > 0 ? (checkTip / mealCost) * 100 : 0;
+
+            // Trigger Guardrail A: If downward round causes effective tip to drop more than -1% below target
+            if ((checkEffectivePct - desiredTipPct) < -1.0 || checkTip < tipOverrideAmt) {
+                evenTotalTrial = Math.ceil(rawTotal);
+            }
+
+            // Assert baseline absolute safety minimum floor
+            const minimumRequired = Math.ceil(mealCost * surchargeMult);
+            const absoluteFloor = Math.ceil((mealCost + tipOverrideAmt) * surchargeMult);
+            const strictFloor = Math.max(minimumRequired, absoluteFloor);
+            
+            if (evenTotalTrial < strictFloor) {
+                evenTotalTrial = strictFloor;
+            }
+
+            const finalTip = parseFloat(((evenTotalTrial / surchargeMult) - mealCost).toFixed(2));
+            const finalEffectivePct = mealCost > 0 ? ((finalTip / mealCost) * 100).toFixed(1) : 0;
+            const finalSurcharge = parseFloat((evenTotalTrial - mealCost - finalTip).toFixed(2));
+
+            return { mealCost, surchargeAmt: finalSurcharge, adjustedTipAmt: finalTip, effectiveTipPct: parseFloat(finalEffectivePct), evenTotal: evenTotalTrial, splitShare: evenTotalTrial };
+        } else {
+            // MODE B: Individual Whole-Dollar Group Balancing Track
+            const rawIndividualShare = rawTotal / partySize;
+            let splitShareTrial = Math.round(rawIndividualShare);
+
+            // Back-test what this trial share does to our grand total and server tip
+            let evenTotalTrial = splitShareTrial * partySize;
+            let checkTip = parseFloat(((evenTotalTrial / surchargeMult) - mealCost).toFixed(2));
+            let checkEffectivePct = mealCost > 0 ? (checkTip / mealCost) * 100 : 0;
+
+            // Trigger Guardrail B: Check if standard round breached -1% variance limit OR tip override floor
+            if ((checkEffectivePct - desiredTipPct) < -1.0 || checkTip < tipOverrideAmt) {
+                splitShareTrial = Math.ceil(rawIndividualShare);
+            }
+
+            // Assert absolute system floor bounds to secure minimum legal invoice totals
+            const minimumRequiredTotal = Math.ceil(mealCost * surchargeMult);
+            const absoluteFloorTotal = Math.ceil((mealCost + tipOverrideAmt) * surchargeMult);
+            const strictFloorTotal = Math.max(minimumRequiredTotal, absoluteFloorTotal);
+            const minimumIndividualShare = Math.ceil(strictFloorTotal / partySize);
+            
+            if (splitShareTrial < minimumIndividualShare) {
+                splitShareTrial = minimumIndividualShare;
+            }
+
+            // Project finalized parameters out to compute active layout fields
+            const finalizedGrandTotal = splitShareTrial * partySize;
+            const finalTip = parseFloat(((finalizedGrandTotal / surchargeMult) - mealCost).toFixed(2));
+            const finalEffectivePct = mealCost > 0 ? ((finalTip / mealCost) * 100).toFixed(1) : 0;
+            const finalSurcharge = parseFloat((finalizedGrandTotal - mealCost - finalTip).toFixed(2));
+
+            return { mealCost, surchargeAmt: finalSurcharge, adjustedTipAmt: finalTip, effectiveTipPct: parseFloat(finalEffectivePct), evenTotal: finalizedGrandTotal, splitShare: splitShareTrial };
+        }
+    }
+    // --- Controller & UI Presentation Layers ---
     function calculateBill() {
-        // Same calculation logic as before...
-        let mealCost = Math.max(0, parseFloat(document.getElementById('mealCost').value) || 0);
-        // ... (rest of calculation)
-        // Update outputs
-        document.getElementById('outMeal').textContent = '$' + mealCost.toFixed(2);
-        // (full implementation available on request)
-        console.log("Calculated on Android");
+        // Enforce input sanitize rules & threshold upper boundary caps
+        let mealCost = Math.max(0, parseFloat(mealCostInput.value) || 0);
+        let surchargeRate = Math.max(0, parseFloat(surchargeRateInput.value) || 0);
+        let desiredTipPct = Math.max(0, parseFloat(desiredTipPctInput.value) || 0);
+        let tipOverrideAmt = Math.max(0, parseFloat(tipOverrideInput.value) || 0);
+        let partySize = Math.max(1, parseInt(partySizeInput.value, 10) || 1);
+
+        if (mealCost > INPUT_CAP_MAX) { 
+            mealCost = INPUT_CAP_MAX; 
+            mealCostInput.value = INPUT_CAP_MAX; 
+            showToast("Input clamped to system maximum cap limit."); 
+        }
+        if (surchargeRate > 100) { surchargeRate = 100; surchargeRateInput.value = 100; }
+        if (desiredTipPct > 500) { desiredTipPct = 500; desiredTipPctInput.value = 500; }
+        if (tipOverrideAmt > INPUT_CAP_MAX) { tipOverrideAmt = INPUT_CAP_MAX; tipOverrideInput.value = INPUT_CAP_MAX; }
+        if (partySize > 1000) { partySize = 1000; partySizeInput.value = 1000; }
+
+        // Pass configuration metrics down to calculation engine
+        const metrics = computeBillMetrics(mealCost, surchargeRate, desiredTipPct, tipOverrideAmt, partySize);
+
+        if (metrics.evenTotal === 0) {
+            resetOutputs();
+            return;
+        }
+
+        // Output matrix injection layout rendering
+        outMeal.textContent = `$${metrics.mealCost.toFixed(2)}`;
+        outSurcharge.textContent = `$${metrics.surchargeAmt.toFixed(2)}`;
+        outTip.textContent = `$${metrics.adjustedTipAmt.toFixed(2)}`;
+        outEffectiveTip.textContent = `${metrics.effectiveTipPct.toFixed(1)}%`;
+        outTotal.textContent = `$${metrics.evenTotal.toFixed(2)}`;
+
+        // Party dividend allocation splitting evaluation
+        if (partySize > 1) {
+            outSplitShare.textContent = `$${metrics.splitShare.toFixed(2)}`;
+            splitTotalRow.style.display = 'flex';
+        } else {
+            splitTotalRow.style.display = 'none';
+        }
     }
 
-    // Attach handlers with multiple event types for Android
-    function attachHandlers() {
-        document.querySelectorAll('.step-btn, .btn-shortcut').forEach(btn => {
-            ['click', 'touchstart', 'pointerdown'].forEach(ev => {
-                btn.addEventListener(ev, (e) => {
-                    e.preventDefault();
-                    const id = btn.dataset.id;
-                    const amount = parseFloat(btn.dataset.amount);
-                    const val = parseFloat(btn.dataset.val);
-                    if (amount !== undefined) adjustValue(id, amount);
-                    if (val !== undefined) setPreset(id, val);
-                }, { passive: false });
-            });
-        });
-
-        inputs.forEach(input => {
-            input.addEventListener('input', calculateBill);
-            input.addEventListener('change', calculateBill);
-            input.addEventListener('blur', calculateBill);
-        });
+    function resetOutputs() {
+        outMeal.textContent = '$0.00';
+        outSurcharge.textContent = '$0.00';
+        outTip.textContent = '$0.00';
+        outEffectiveTip.textContent = '0.0%';
+        outTotal.textContent = '$0.00';
+        splitTotalRow.style.display = 'none';
     }
 
-    window.addEventListener('load', () => {
-        attachHandlers();
+    // Workspace Clear Button Execution Handler
+    function clearMainForm() {
+        mealCostInput.value = '';
+        surchargeRateInput.value = '0.0';
+        desiredTipPctInput.value = '18.0';
+        tipOverrideInput.value = '0';
+        partySizeInput.value = '1';
+        billNotesInput.value = '';
+        
+        resetOutputs();
+        mealCostInput.focus();
+        showToast("Calculator workspace completely reset.");
+    }
+
+    // Custom Incremental Input Modifier Interceptor Engine
+    function adjustValue(id, amount) {
+        const input = document.getElementById(id);
+        let val = parseFloat(input.value) || 0;
+        val = Math.max(0, parseFloat((val + amount).toFixed(1)));
+        input.value = (id === 'partySize') ? Math.max(1, Math.round(val)) : val;
         calculateBill();
-        console.log("Calc-TIP_GROK v5f initialized");
+    }
+
+    function setPreset(id, val) {
+        document.getElementById(id).value = val.toFixed(1);
+        calculateBill();
+    }
+    // --- Interactive Notification Engine ---
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.setAttribute('role', 'alert');
+        toast.textContent = message;
+        toastContainer.appendChild(toast);
+        setTimeout(() => { toast.remove(); }, 4000);
+    }
+
+    // --- Data Layer Architecture: Local Storage Persistent Registries ---
+    function getStoredHistory() {
+        try {
+            return JSON.parse(localStorage.getItem('billCalcHistory')) || [];
+        } catch {
+            return [];
+        }
+    }
+
+    function renderHistoryUI() {
+        const historyData = getStoredHistory();
+        if (historyData.length === 0) {
+            historyList.innerHTML = '<div class="empty-history" role="status">No records found within current workspace profile.</div>';
+            return;
+        }
+
+        historyList.innerHTML = '';
+        historyData.forEach((record) => {
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            
+            let notesHtml = record.notes ? `<div class="history-item-notes">${escapeHtml(record.notes)}</div>` : '';
+            let splitHtml = record.partySize > 1 ? `<div style="color: var(--brand-highlight);">Split [${record.partySize} ways]: $${record.splitShare} each</div>` : '';
+
+            item.innerHTML = `
+                <div class="history-item-header">
+                    <span>Total: ${record.total}</span>
+                    <span style="font-weight: normal; font-size: 11px; color: var(--text-muted);">${record.timestamp}</span>
+                </div>
+                <div>Meal: ${record.meal} | Tip: ${record.tip} (${record.effectiveTip})</div>
+                ${splitHtml}
+                ${notesHtml}
+            `;
+            historyList.appendChild(item);
+        });
+    }
+
+    function saveToHistory() {
+        const total = outTotal.textContent;
+        if (total === '$0.00') return;
+
+        const partySize = parseInt(partySizeInput.value, 10) || 1;
+        const historyData = getStoredHistory();
+        
+        const newRecord = {
+            id: Date.now().toString(),
+            timestamp: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+            meal: outMeal.textContent,
+            surcharge: outSurcharge.textContent,
+            tip: outTip.textContent,
+            effectiveTip: outEffectiveTip.textContent,
+            total: total,
+            partySize: partySize,
+            splitShare: outSplitShare.textContent,
+            notes: billNotesInput.value.trim()
+        };
+
+        historyData.unshift(newRecord);
+        localStorage.setItem('billCalcHistory', JSON.stringify(historyData));
+        renderHistoryUI();
+        // billNotesInput.value = ''; // Retain notes on-screen as requested. Reset via Clear button.
+        showToast("Record successfully written to local ledger storage profile.");
+    }
+
+    function clearAllHistory() {
+        if (confirm("Are you sure you want to permanently purge all saved table records? This data layer operation cannot be reversed.")) {
+            localStorage.removeItem('billCalcHistory');
+            renderHistoryUI();
+            showToast("Workspace history index logs completely erased.");
+        }
+    }
+
+    // --- File Serialization Marshalling Transforms (Export Framework) ---
+    function exportData(format) {
+        const historyData = getStoredHistory();
+        if (historyData.length === 0) {
+            showToast("Unable to execute transfer export: Current storage vector matrix is empty.");
+            return;
+        }
+
+        let outputStr = '';
+        let mimeType = 'text/plain';
+        let fileExtension = 'txt';
+
+        if (format === 'json') {
+            outputStr = JSON.stringify(historyData, null, 2);
+            mimeType = 'application/json';
+            fileExtension = 'json';
+        } else if (format === 'csv') {
+            const columns = ['ID', 'Timestamp', 'Meal Cost', 'Surcharge', 'Tip', 'Effective Tip %', 'Total Bill', 'Party Size', 'Share', 'Notes'];
+            const rows = historyData.map(r => [
+                r.id, r.timestamp, r.meal, r.surcharge, r.tip, r.effectiveTip, r.total, r.partySize, r.splitShare, `"${(r.notes || '').replace(/"/g, '""')}"`
+            ]);
+            outputStr = [columns.join(','), ...rows.map(row => row.join(','))].join('\n');
+            mimeType = 'text/csv';
+            fileExtension = 'csv';
+        }
+
+        const blob = new Blob([outputStr], { type: `${mimeType};charset=utf-8;` });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute("download", `bill_history_export_${Date.now()}.${fileExtension}`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast(`History ledger downloaded as file format: ${format.toUpperCase()}`);
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // --- Device Utility Input Handlers & Macro Monitors ---
+    window.addEventListener('keydown', (e) => {
+        // Macro Context Bindings: Ctrl + S to commit ledger
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+            e.preventDefault();
+            saveToHistory();
+        }
+        // Macro Context Bindings: Ctrl + K to drop focus context on core cost
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+            e.preventDefault();
+            clearMainForm();
+        }
     });
+
+    // Theme Custom Matrix Registry Drivers
+    function initTheme() {
+        const activeTheme = localStorage.getItem('appThemeConfig') || 'light';
+        document.documentElement.setAttribute('data-theme', activeTheme);
+    }
+
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', nextTheme);
+        localStorage.setItem('appThemeConfig', nextTheme);
+    });
+
+    // Mobile Responsive Target Component Accordion Controller
+    historyToggle.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            const isCollapsed = historyCard.classList.toggle('collapsed');
+            historyToggle.setAttribute('aria-expanded', !isCollapsed);
+        }
+    });
+
+    // App Workspace System Event Binder Initialization
+    [mealCostInput, surchargeRateInput, desiredTipPctInput, tipOverrideInput, partySizeInput].forEach(input => {
+        input.addEventListener('input', calculateBill);
+    });
+
+    // Initial Engine Bootstrap Execution Trigger
+    initTheme();
+    renderHistoryUI();
 </script>
 </body>
 </html>
