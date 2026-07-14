@@ -356,19 +356,171 @@
             .results-section { border: 1px solid #000 !important; background: transparent !important; }
             .result-row { color: black !important; }
         }
+
+        /* --- HELP MODAL OVERLAY STYLES --- */
+        .modal-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Dimmed backdrop */
+            backdrop-filter: blur(4px); /* Modern frosted-glass effect */
+            z-index: 2000; /* Ensures it sits on top of everything */
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            max-width: 650px;
+            width: 100%;
+            max-height: 85vh; /* Prevents card from spilling off screen */
+            border-radius: var(--radius-main);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            animation: fadeInModal 0.2s ease;
+        }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-results);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--brand-primary);
+        }
+
+        .btn-close-modal {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 4px 8px;
+            border-radius: var(--radius-inner);
+            transition: var(--transition);
+        }
+
+        .btn-close-modal:hover {
+            color: var(--brand-danger);
+            background-color: var(--bg-secondary-hover);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto; /* Adds a clean scrollbar inside the card if text is long */
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Typography styles inside the user guide */
+        .modal-body h4 {
+            margin-top: 24px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-results);
+            padding-bottom: 4px;
+        }
+        .modal-body h4:first-of-type { margin-top: 0; }
+
+        .modal-body ul {
+            margin: 0 0 16px 0;
+            padding-left: 20px;
+        }
+
+        .modal-body li {
+            margin-bottom: 8px;
+        }
+
+        .modal-body strong {
+            color: var(--text-primary);
+        }
+
+        /* Layout for the Help Button in Header Row */
+        .header-actions-group {
+            display: flex;
+            align-items: center;
+            gap: 12px; /* Spaces the HELP button and 🌓 toggle nicely */
+        }
+
+        .btn-help-trigger {
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+            border-radius: var(--radius-inner);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-help-trigger:hover {
+            background-color: var(--bg-secondary-hover);
+            color: var(--text-primary);
+        }
+
+        /* Help-specific data table layout */
+        .help-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 20px 0;
+            font-size: 0.85rem;
+        }
+        .help-table th, .help-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .help-table th {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Ensure the help pop-up NEVER prints out on paper receipts */
+        @media print {
+            .modal-overlay { display: none !important; }
+        }
+  
     </style>
 </head>
 <body>
 
 <div class="container" role="main">
+
+    
     <!-- Main Interactive Form Card Block -->
     <div class="calculator-card">
-        <div class="header-row">
-            
-            <h2>Bill Calculator</h2>
-            <p id="version-subtitle" style="font-size: 0.75rem; color: var(--text-muted); margin-top: -10px; margin-bottom: 20px;"></p>
-            <button id="themeToggle" class="btn-theme-toggle" aria-label="Toggle dark and light application theme" title="Toggle Display Theme">🌓</button>
-        </div>
+
+            <div class="header-row">
+                <div>
+                    <h2>Bill Calculator</h2>
+                    <p id="version-subtitle" style="font-size: 0.75rem; color: var(--text-muted); margin-top: -10px; margin-bottom: 20px;"></p>
+                </div>
+                <!-- Grouped Utility Actions -->
+                <div class="header-actions-group">
+                    <button id="helpToggle" class="btn-help-trigger" title="Open User Guide">HELP</button>
+                    <button id="themeToggle" class="btn-theme-toggle" aria-label="Toggle dark and light application theme" title="Toggle Display Theme">🌓</button>
+                </div>
+            </div>
         
         <!-- Base Input Component Group: Meal Cost -->
         <div class="form-group">
@@ -886,5 +1038,76 @@
     document.getElementById("app-title").textContent = FULL_TITLE;
     document.getElementById("version-subtitle").textContent = FULL_TITLE;
 </script>
+    <!-- GLOBAL MODAL: USER GUIDE & QUICK REFERENCE -->
+<div id="helpModal" class="modal-overlay" aria-hidden="true" role="dialog">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>📖 User Guide & Quick Reference</h3>
+            <button id="closeModal" class="btn-close-modal" aria-label="Close user guide">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="margin-top:0; color: var(--text-secondary); font-style: italic;">
+                Welcome to your offline-first, group-optimized billing workspace. This guide explains how to use the calculator's advanced rounding engines, custom shortcuts, and server protection guardrails.
+            </p>
+
+            <h4>🚀 Quick Start Guide</h4>
+            <ul>
+                <li><strong>Open the App:</strong> Double-click your saved .html file which will run within your web browser.</li>
+                <li><strong>Enter the Meal Cost:</strong> Type the base receipt subtotal (Meal + Tax) into the Meal Cost box.</li>
+                <li><strong>Set the Rates:</strong> Adjust your credit card fee and target tip using the quick-select percentage buttons.</li>
+                <li><strong>Split the Bill (Optional):</strong> Change the Number of People field to instantly divide the total.</li>
+                <li><strong>Log & Clear:</strong> Click Save History to log the receipt to your sidebar, then click Clear to wipe the board for your next meal.</li>
+            </ul>
+
+            <h4>🛠️ Inputs & Advanced Controls</h4>
+            <ul>
+                <li><strong>💳 Credit Card Surcharge Rate (Default 0.0%):</strong> Quick Presets: 1%, 2%, 3%. Math Behavior: This surcharge is dynamically applied to the combined subtotal of the food and the finalized tip, perfectly mirroring modern retail merchant processors.</li>
+                <li><strong>💰 Desired Tip Percentage (Default 18.0%):</strong> Prefilled on launch. Quick Presets: 15%, 18%, 20%. Math Behavior: Serves as your ideal baseline target. The rounding engine will dynamically pivot off this number to secure your whole-dollar totals.</li>
+                <li><strong>🛡️ Tip Override (Minimum Dollar Amount - Default $0):</strong> Acts as an unconditional cash floor for the server. Perfect for small bills (e.g., a $4 coffee where an 18% tip is only pennies, but you want to leave a flat $2), or if you prefer to tip a specific flat cash amount regardless of bill percentages.</li>
+                <li><strong>👥 Number of People (Split - Default 1):</strong> Dictates whether the calculator targets a whole-dollar Grand Total (Party Size = 1) or a whole-dollar Per-Person Share (Party Size > 1).</li>
+            </ul>
+
+            <h4>🔬 How Version 5c Protects Your Server</h4>
+            <p style="color: var(--text-secondary); margin-bottom: 8px;">Traditional bill-splitting tools round down blindly, which aggressively shortchanges waitstaff as groups grow. Version 5c introduces Tip Protection Layout Metrics:</p>
+            <ul>
+                <li><strong>🚫 The -1.0% Downside Variance Guardrail:</strong> When splitting, the application runs a trial calculation by rounding the individual share to the closest dollar. It then cross-checks what that round does to the server's tip percentage. If a downward round causes the Effective Tip Rate to drop more than 1.0% below your Desired Tip, the guardrail instantly overrides standard rounding and forces the calculation to round UP to the next whole dollar instead.</li>
+                <li><strong>🛑 The Override Floor Enforcement:</strong> If a downward round attempts to drop the total tip amount below the value specified in your Tip Override box, the calculator blocks the downward slide and forces an upward round to keep that cash floor fully locked.</li>
+            </ul>
+
+            <h4>⚡ Power-User Keyboard Shortcuts</h4>
+            <p style="color: var(--text-secondary); margin-bottom: 4px;">Speed up data entry using built-in system hotkeys:</p>
+            <table class="help-table">
+                <thead>
+                    <tr>
+                        <th>Shortcut</th>
+                        <th>Action</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Ctrl + K</strong> (or <strong>Cmd + K</strong>)</td>
+                        <td>Reset & Focus Workspace</td>
+                        <td>Instantly clears all data fields, sets defaults, and places your typing cursor directly inside the Meal Cost box.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ctrl + S</strong> (or <strong>Cmd + S</strong>)</td>
+                        <td>Save History</td>
+                        <td>Commits your current calculation values to your persistent data ledger without needing to use your trackpad.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>🗄️ Data Management & Portability</h4>
+            <ul>
+                <li><strong>💾 Persistent Local Storage:</strong> All saved receipts are committed straight to your browser's internal localStorage engine. They will safely survive browser refreshes, tab closures, and system restarts.</li>
+                <li><strong>📝 Smart Notes Field:</strong> The 5-line Notes description panel holds onto your text after you save. This allows you to log a transaction, tweak a number, and log it again without re-typing your text. To clear out your notes, simply click the global Clear button.</li>
+                <li><strong>📥 Exporting & Backups:</strong> At the bottom of your Saved History sidebar, use the file serialization utilities to download your logs via <strong>Export CSV</strong> (for Google Sheets/Excel) or <strong>Export JSON</strong> (structural backups). <strong>Clear All</strong> permanently clears your logs with a confirmation prompt.</li>
+                <li><strong>🖨️ Clean Print / PDF Formatting:</strong> Clicking Print / PDF activates a custom CSS media driver. It automatically strips away theme switchers, shortcut pills, stepper arrows, and the history sidebar, leaving you with a minimalist, clean, professional receipt layout ready to print or save as a PDF.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
