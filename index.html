@@ -1041,7 +1041,9 @@
     document.getElementById("app-title").textContent = FULL_TITLE;
     document.getElementById("version-subtitle").textContent = FULL_TITLE;
 </script>
-    <!-- GLOBAL MODAL: USER GUIDE & QUICK REFERENCE -->
+
+
+<!-- GLOBAL MODAL: USER GUIDE & QUICK REFERENCE -->
 <div id="helpModal" class="modal-overlay" aria-hidden="true" role="dialog">
     <div class="modal-card">
         <div class="modal-header">
@@ -1112,5 +1114,107 @@
     </div>
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // --- HELP MODAL OPERATIONAL LOGIC ENGINE ---
+    const helpModal = document.getElementById('helpModal');
+    const helpToggleBtn = document.getElementById('helpToggle');
+    const closeModalBtn = document.getElementById('closeModal');
+
+    // Verify all components exist before mounting click hooks
+    if (helpToggleBtn && helpModal && closeModalBtn) {
+        
+        // Open Modal Interaction Event
+        helpToggleBtn.addEventListener('click', function() {
+            helpModal.style.display = 'flex';
+            helpModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden'; // Freeze background scroll
+        });
+
+        // Close Modal via "X" Button Event
+        closeModalBtn.addEventListener('click', closeModal);
+
+        // Close Modal via Overlay Background Click Event
+        helpModal.addEventListener('click', function(event) {
+            if (event.target === helpModal) {
+                closeModal();
+            }
+        });
+    }
+
+    // Standardized Modal Close Utility Function
+    function closeModal() {
+        helpModal.style.display = 'none';
+        helpModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = ''; // Unfreeze background scroll
+    }
+
+    // Keyboard Listener: Hit 'Escape' to dismiss help window box
+    window.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && helpModal && helpModal.style.display === 'flex') {
+            closeModal();
+        }
+    });
+});
+</script>
+
+
+    
+<script>
+// --- GLOBAL APPLICATION INJECTOR ENGINE ---
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // 1. DYNAMIC VERSION INJECTION (From previous step)
+    // Combines your name and version variables and handles the title/subtitle drops
+    const APP_NAME = "Calc-TIP";
+    const APP_VERSION = "GROK v5c";
+    const FULL_TITLE = `${APP_NAME} ${APP_VERSION}`;
+
+    const titleEl = document.getElementById("app-title");
+    const subtitleEl = document.getElementById("version-subtitle");
+    
+    if (titleEl) titleEl.textContent = FULL_TITLE;
+    if (subtitleEl) subtitleEl.textContent = FULL_TITLE;
+
+    // 2. HELP MODAL OPERATIONAL INTERACTION LOGIC
+    const helpModal = document.getElementById('helpModal');
+    const helpToggleBtn = document.getElementById('helpToggle');
+    const closeModalBtn = document.getElementById('closeModal');
+
+    if (helpToggleBtn && helpModal && closeModalBtn) {
+        // Open Modal Interaction Event
+        helpToggleBtn.addEventListener('click', function() {
+            helpModal.style.display = 'flex';
+            helpModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden'; // Freeze main card background scroll
+        });
+
+        // Close Modal via "X" Button Event
+        closeModalBtn.addEventListener('click', closeModal);
+
+        // Close Modal via Overlay Background Click Event
+        helpModal.addEventListener('click', function(event) {
+            if (event.target === helpModal) {
+                closeModal();
+            }
+        });
+    }
+
+    function closeModal() {
+        helpModal.style.display = 'none';
+        helpModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = ''; // Restore main card background scroll
+    }
+
+    // Keyboard Listener: Hit 'Escape' to dismiss help window box
+    window.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && helpModal && helpModal.style.display === 'flex') {
+            closeModal();
+        }
+    });
+});
+</script>
+
+    
 </body>
 </html>
