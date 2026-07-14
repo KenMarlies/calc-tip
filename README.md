@@ -4,12 +4,12 @@ Restaurant Bill & Tip Calculator (v5c) — User Guide & Quick Reference
 Welcome to your offline-first, group-optimized billing workspace. This guide explains how to use the calculator's advanced rounding engines, custom shortcuts, and server protection guardrails.
 
 🚀 Quick Start Guide
-Open the App: Double-click your saved .html file which will run within your web browser..
+Open the App using this URL:  https://kenmarlies.github.io/calc-tip/
 Enter the Meal Cost: Type the base receipt subtotal (Meal + Tax) into the Meal Cost box.
 Set the Rates: Adjust your credit card fee and target tip using the quick-select percentage buttons.
 Split the Bill (Optional): Change the Number of People field to instantly divide the total.
 Log & Clear: Click Save History to log the receipt to your sidebar, 
-then click Clear to wipe the board for your next meal.
+then click Clear to wipe the board for your next meal -or- simply modify the prior entries for another bill.
 
 🛠️ Inputs & Advanced Controls
 💳 Credit Card Surcharge Rate
@@ -28,8 +28,8 @@ Use Case: Perfect for small bills (e.g., a $4 coffee where an 18% tip is only pe
 Default: 1
 What it does: Dictates whether the calculator targets a whole-dollar Grand Total (Party Size = 1) or a whole-dollar Per-Person Share (Party Size > 1).
 
-🔬 How Version 5c Protects Your Server
-Traditional bill-splitting tools round down blindly, which aggressively shortchanges waitstaff as groups grow. Version 5c introduces Tip Protection Layout Metrics:
+🔬 How this will Protect Your Server
+Traditional bill-splitting tools round down blindly, which aggressively shortchanges waitstaff as groups grow. This introduces Tip Protection Layout Metrics:
 🚫 The -1.0% Downside Variance Guardrail
 When splitting, the application runs a trial calculation by rounding the individual share to the closest dollar. It then cross-checks what that round does to the server's tip percentage.
 If a downward round causes the Effective Tip Rate to drop more than 1.0% below your Desired Tip, the guardrail instantly overrides standard rounding.
