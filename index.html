@@ -510,13 +510,16 @@
     <!-- Main Interactive Form Card Block -->
     <div class="calculator-card">
 
-            <div class="header-row">
-                <div>
-                    <h2>Bill Calculator</h2>
-                    <p id="version-subtitle" style="font-size: 0.75rem; color: var(--text-muted); margin-top: -10px; margin-bottom: 20px;"></p>
+
+                <div class="header-row" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <!-- Stacked Title Group (Prevents shifting) -->
+                <div class="title-stack" style="display: flex; flex-direction: column; text-align: left;">
+                    <h2 style="margin: 0;">Bill Calculator</h2>
+                    <p id="version-subtitle" style="font-size: 0.75rem; color: var(--text-muted); margin: 4px 0 0 0;"></p>
                 </div>
+        
                 <!-- Grouped Utility Actions -->
-                <div class="header-actions-group">
+                <div class="header-actions-group" style="display: flex; align-items: center; gap: 12px;">
                     <button id="helpToggle" class="btn-help-trigger" title="Open User Guide">HELP</button>
                     <button id="themeToggle" class="btn-theme-toggle" aria-label="Toggle dark and light application theme" title="Toggle Display Theme">🌓</button>
                 </div>
