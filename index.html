@@ -719,7 +719,7 @@
             item.className = 'history-item';
             
             let notesHtml = record.notes ? `<div class="history-item-notes">${escapeHtml(record.notes)}</div>` : '';
-            let splitHtml = record.partySize > 1 ? `<div style="color: var(--brand-highlight);">Split [${record.partySize} ways]: $${record.splitShare} each</div>` : '';
+            let splitHtml = record.partySize > 1 ? `<div style="color: var(--brand-highlight);">Split [${record.partySize} ways]: ${record.splitShare} each</div>` : '';
 
             item.innerHTML = `
                 <div class="history-item-header">
