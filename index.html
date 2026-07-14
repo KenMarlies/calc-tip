@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        // Configuration settings
+            const APP_NAME = "Calc-TIP";
+            const APP_VERSION = "GROK v5c";
+        // Combines them into "Calc-TIP GROK v5c"
+            const FULL_TITLE = `${APP_NAME} ${APP_VERSION}`;
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calc-TIP GROK v5c</title>
+    <title id="app-title"></title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#3182ce">
     <style>
@@ -340,7 +347,9 @@
     <!-- Main Interactive Form Card Block -->
     <div class="calculator-card">
         <div class="header-row">
+            
             <h2>Bill Calculator</h2>
+            <p id="version-subtitle" style="font-size: 0.75rem; color: #888; margin-top: -10px; margin-bottom: 20px;"></p>
             <button id="themeToggle" class="btn-theme-toggle" aria-label="Toggle dark and light application theme" title="Toggle Display Theme">🌓</button>
         </div>
         
@@ -348,6 +357,11 @@
         <div class="form-group">
             <div class="label-row">
                 <label for="mealCost">Meal Cost</label>
+
+                <label for="mealCost">
+    Meal Cost <span style="font-size: 0.75rem; color: #666; font-weight: normal;">(includes both Meal Cost + Taxes)</span>
+                </label>
+                
             </div>
             <div class="input-wrapper">
                 <span class="prefix" aria-hidden="true">$</span>
@@ -852,6 +866,11 @@
     // Initial Engine Bootstrap Execution Trigger
     initTheme();
     renderHistoryUI();
+</script>
+<script>
+    // Injects the combined text into the tab and the webpage subtitle
+    document.getElementById("app-title").textContent = FULL_TITLE;
+    document.getElementById("version-subtitle").textContent = FULL_TITLE;
 </script>
 </body>
 </html>
