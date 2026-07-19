@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Dynamic Title Holder Node -->
-    <title id="app-title">Calc-TIP v5g</title>
+    <title id="app-title">Calc-TIP v5h</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#3182ce">
     <style>
@@ -625,32 +625,53 @@
 
 <!-- MINI CALCULATOR MODAL OVERLAY -->
 <div id="miniCalcModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:3000; justify-content:center; align-items:center; backdrop-filter:blur(4px);">
-    <div style="background:var(--bg-card); padding:24px; border-radius:12px; width:320px; border:1px solid var(--border-color); box-shadow:var(--shadow);">
-        <input id="calcDisplay" readonly style="width:100%; font-size:28px; text-align:right; margin-bottom:16px; font-family:monospace; padding:8px; border-radius:var(--radius-inner); background-color:var(--bg-results); border:1px solid var(--border-color); color:var(--text-primary);" value="0">
+    <div style="background:var(--bg-card); padding:24px; border-radius:12px; width:340px; border:1px solid var(--border-color); box-shadow:var(--shadow);">
+        <!-- Dual Display Screen: Live Formula Input & Sub-Total Preview -->
+        <div style="margin-bottom:16px; border-radius:var(--radius-inner); background-color:var(--bg-results); border:1px solid var(--border-color); padding:10px; display:flex; flex-direction:column; gap:4px;">
+            <input id="calcDisplay" readonly style="width:100%; font-size:24px; text-align:right; font-family:monospace; background:transparent; border:none; color:var(--text-primary); outline:none; padding:0;" value="0">
+            <div id="calcPreview" style="font-size:14px; text-align:right; font-family:monospace; color:var(--text-muted); min-height:1.2em; word-break:break-all;"></div>
+        </div>
+        
+        <!-- Expanded Android-Style 6-Row Calculator Keypad Grid -->
         <div class="mini-calc-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+            <!-- Row 1: Helpers & Backspace -->
+            <button class="op-btn" style="background-color:var(--bg-secondary); color:var(--text-primary);" onclick="calcInput('(')">(</button>
+            <button class="op-btn" style="background-color:var(--bg-secondary); color:var(--text-primary);" onclick="calcInput(')')">)</button>
+            <button class="op-btn" style="background-color:var(--bg-secondary); color:var(--text-primary);" onclick="calcInput('%')">%</button>
+            <button class="op-btn" style="background-color:var(--bg-secondary); color:var(--brand-danger);" onclick="calcBackspace()">⌫</button>
+            
+            <!-- Row 2 -->
             <button onclick="calcInput('7')">7</button>
             <button onclick="calcInput('8')">8</button>
             <button onclick="calcInput('9')">9</button>
-            <button class="op-btn" onclick="calcOp('/')">/</button>
+            <button class="op-btn" onclick="calcInput('/')">/</button>
             
+            <!-- Row 3 -->
             <button onclick="calcInput('4')">4</button>
             <button onclick="calcInput('5')">5</button>
             <button onclick="calcInput('6')">6</button>
-            <button class="op-btn" onclick="calcOp('*')">*</button>
+            <button class="op-btn" onclick="calcInput('*')">*</button>
             
+            <!-- Row 4 -->
             <button onclick="calcInput('1')">1</button>
             <button onclick="calcInput('2')">2</button>
             <button onclick="calcInput('3')">3</button>
-            <button class="op-btn" onclick="calcOp('-')">-</button>
+            <button class="op-btn" onclick="calcInput('-')">-</button>
             
+            <!-- Row 5 -->
             <button onclick="calcInput('0')">0</button>
             <button onclick="calcInput('.')">.</button>
-            <button class="op-btn" style="background-color:var(--brand-danger);" onclick="document.getElementById('calcDisplay').value='0'; calcPrevious=0; calcOperator=null;">C</button>
-            <button class="op-btn" onclick="calcOp('+')">+</button>
+            <button class="op-btn" style="background-color:var(--brand-danger); color:white;" onclick="calcClear()">C</button>
+            <button class="op-btn" onclick="calcInput('+')">+</button>
+            
+            <!-- Row 6: Wide Equal Button Layout Block -->
+            <button class="op-btn" style="grid-column: span 4; background-color:var(--brand-primary); color:white; padding:12px;" onclick="calcEquals()">=</button>
         </div>
+        
+        <!-- Bottom Explicit Action Utilities -->
         <div style="display:flex; gap:10px; margin-top:14px;">
             <button class="btn-main" style="background:var(--bg-secondary); color:var(--text-primary); border:1px solid var(--border-color); font-size:14px; padding:10px;" onclick="closeMiniCalc()">Cancel</button>
-            <button class="btn-main btn-save" style="font-size:14px; padding:10px;" onclick="calcEquals()">= Accept</button>
+            <button class="btn-main btn-save" style="font-size:14px; padding:10px;" onclick="calcAccept()">✓ Accept Total</button>
         </div>
     </div>
 </div>
@@ -702,13 +723,13 @@
                     </tr>
                 </thead>
 <script>
+
 // Global Engine Bootstrap Handlers
 document.addEventListener("DOMContentLoaded", function() {
     // 1. UNIFIED METADATA VARIABLE INJECTION
     const APP_NAME = "Calc-TIP";
-    const APP_VERSION = "GROK v5g";
+    const APP_VERSION = "v5h";
     const FULL_TITLE = `${APP_NAME} ${APP_VERSION}`;
-
     const titleEl = document.getElementById("app-title");
     const subtitleEl = document.getElementById("version-subtitle");
     if (titleEl) titleEl.textContent = FULL_TITLE;
@@ -927,22 +948,142 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // 2. INTEGRATED MINI CALCULATOR LOGIC ENGINE
-    let calcPrevious = 0; let calcOperator = null;
-    window.openMiniCalc = function() { document.getElementById('miniCalcModal').style.display = 'flex'; document.getElementById('calcDisplay').value = '0'; };
-    window.closeMiniCalc = function() { document.getElementById('miniCalcModal').style.display = 'none'; };
-    window.calcInput = function(num) { const d = document.getElementById('calcDisplay'); d.value = d.value === '0' && num !== '.' ? num : d.value + num; };
-    window.calcOp = function(op) { const d = document.getElementById('calcDisplay'); calcPrevious = parseFloat(d.value) || 0; calcOperator = op; d.value = '0'; };
-    window.calcEquals = function() {
-        const d = document.getElementById('calcDisplay'); const current = parseFloat(d.value) || 0; let result = 0;
-        if (calcOperator === '+') result = calcPrevious + current;
-        else if (calcOperator === '-') result = calcPrevious - current;
-        else if (calcOperator === '*') result = calcPrevious * current;
-        else if (calcOperator === '/') result = current !== 0 ? calcPrevious / current : 0;
-        else result = current;
-        d.value = result; mealCostInput.value = result.toFixed(2); calculateBill();
-        setTimeout(closeMiniCalc, 500);
+    // 2. INTEGRATED MINI CALCULATOR FORMULA ENGINE (v5h Overhaul)
+    let isFreshLoad = false; // Tracks if preloaded text should be overwritten on first keystroke
+
+    window.openMiniCalc = function() {
+        const modal = document.getElementById('miniCalcModal');
+        const display = document.getElementById('calcDisplay');
+        const preview = document.getElementById('calcPreview');
+        const currentMeal = mealCostInput.value.trim();
+        
+        modal.style.display = 'flex';
+        preview.textContent = '';
+        
+        // Item 1 Fix: Preload existing meal cost if it exists, otherwise default to zero
+        if (currentMeal && !isNaN(parseFloat(currentMeal))) {
+            display.value = parseFloat(currentMeal).toString();
+            isFreshLoad = true; // Flag that the next key may trigger an overwrite
+            runLivePreview(display.value);
+        } else {
+            display.value = '0';
+            isFreshLoad = false;
+        }
     };
+
+    window.closeMiniCalc = function() {
+        document.getElementById('miniCalcModal').style.display = 'none';
+    };
+
+    window.calcInput = function(token) {
+        const display = document.getElementById('calcDisplay');
+        const current = display.value;
+        const operators = ['+', '-', '*', '/', '%', ')'];
+
+        // Item 1 Improvement: Overwrite preloaded math numbers on first fresh key, unless an operator is pressed
+        if (isFreshLoad) {
+            isFreshLoad = false;
+            if (!operators.includes(token) && token !== '(') {
+                display.value = token === '.' ? '0.' : token;
+                runLivePreview(display.value);
+                return;
+            }
+        }
+
+        // Avoid leaving a raw hanging starting '0' text line
+        if (current === '0' && !operators.includes(token) && token !== '.') {
+            display.value = token;
+        } else {
+            display.value += token;
+        }
+        runLivePreview(display.value);
+    };
+
+    // Item 2 Fix: Safe backspace structural character truncation macro
+    window.calcBackspace = function() {
+        const display = document.getElementById('calcDisplay');
+        isFreshLoad = false;
+        if (display.value.length > 1) {
+            display.value = display.value.slice(0, -1);
+        } else {
+            display.value = '0';
+        }
+        runLivePreview(display.value);
+    };
+
+    // Item 5a Fix: Completely erase the current layout expression tree state matrix
+    window.calcClear = function() {
+        isFreshLoad = false;
+        document.getElementById('calcDisplay').value = '0';
+        document.getElementById('calcPreview').textContent = '';
+    };
+
+    // Item 5b Fix: Finalize current running calculation into the layout display box
+    window.calcEquals = function() {
+        isFreshLoad = false;
+        const display = document.getElementById('calcDisplay');
+        const finalizedVal = evaluateExpression(display.value);
+        display.value = finalizedVal;
+        document.getElementById('calcPreview').textContent = ''; // Clear preview drawer following evaluation
+    };
+
+    // Item 4 Fix: Split function to explicitly pull total out to the core workspace page fields
+    window.calcAccept = function() {
+        const display = document.getElementById('calcDisplay');
+        const totalValue = evaluateExpression(display.value);
+        
+        // Inject finalized arithmetic output back into the primary layout fields
+        mealCostInput.value = totalValue;
+        
+        // Fire the core application recalculation sequence engine hooks
+        if (typeof calculateBill === 'function') {
+            calculateBill();
+        }
+        closeMiniCalc();
+    };
+
+    // Background Parser Engine to safely compute standard mathematical expressions
+    function evaluateExpression(expr) {
+        if (!expr || expr.trim() === '0') return '0';
+        try {
+            // Process percentages cleanly: change standalone e.g., '5%' into '* 0.01' or '/100'
+            let structuralFormula = expr.replace(/(\d+(?:\.\d+)?)%/g, '($1 * 0.01)');
+            
+            // Clean up implicit multiplication contexts such as (10)(20) -> (10)*(20)
+            structuralFormula = structuralFormula.replace(/\)(\()/g, ')*$1');
+            structuralFormula = structuralFormula.replace(/(\d+)\(/g, '$1*(');
+            structuralFormula = structuralFormula.replace(/\)(\d+)/g, ')*$1');
+
+            // Sanitize string characters out entirely to secure code string isolation sandboxes
+            if (/[^0-9.+\-*/%()\s]/.test(structuralFormula)) {
+                return 'Error';
+            }
+
+            // Safe sandbox parsing execution context logic routines
+            let evalResult = Function(`"use strict"; return (${structuralFormula})`)();
+            
+            if (evalResult === null || evalResult === undefined || isNaN(evalResult) || !isFinite(evalResult)) {
+                return 'Error';
+            }
+            
+            // Format floats cleanly without unnecessary infinite padding trail characters
+            return parseFloat(Number(evalResult).toFixed(4)).toString();
+        } catch (e) {
+            return 'Error';
+        }
+    }
+
+    // Item 5a Fix: As the user types their values, inject a dynamic subtotal preview down beneath
+    function runLivePreview(expr) {
+        const preview = document.getElementById('calcPreview');
+        // Prevent flashing helper labels if string is single or non-calculating integer structures
+        if (!expr || expr === '0' || !/[+\-*/%()]/.test(expr)) {
+            preview.textContent = '';
+            return;
+        }
+        const outcome = evaluateExpression(expr);
+        preview.textContent = outcome === 'Error' ? '' : '= ' + outcome;
+    }
 
     // 3. USER GUIDE HELPER OVERLAY INTERACTION CONTROLLER
     if (helpToggleBtn && helpModal && closeModalBtn) {
