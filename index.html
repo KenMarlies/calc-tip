@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-        // Configuration settings
-            const APP_NAME = "Calc-TIP";
-            const APP_VERSION = "GROK v5c";
-        // Combines them into "Calc-TIP GROK v5c"
-            const FULL_TITLE = `${APP_NAME} ${APP_VERSION}`;
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="app-title"></title>
+    <!-- Dynamic Title Holder Node -->
+    <title id="app-title">Calc-TIP v5g</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#3182ce">
     <style>
@@ -40,42 +34,50 @@
             --transition: all 0.2s ease;
         }
 
-        [data-theme="dark"] {
-            --bg-body: #1e222b;           /* Softened deep gray canvas */
-            --bg-card: #252b36;           /* Slightly lighter container card */
-            --bg-input: #2e3543;          /* Visible, clear input fields */
+        /* Automatic Soft Dark Theme Token Registry Configuration Override */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-body: #1e222b;
+                --bg-card: #252b36;
+                --bg-input: #2e3543;
+                --bg-secondary: #363f52;
+                --bg-secondary-hover: #434e66;
+                --bg-secondary-active: #515e7a;
+                --bg-results: #2a313e;
+                --border-color: #515e7a;
+                --border-results: #363f52;
+                --text-primary: #f1f5f9;
+                --text-secondary: #cbd5e1;
+                --text-muted: #94a3b8;
+                --brand-primary: #4299e1;
+                --brand-primary-hover: #3182ce;
+                --brand-highlight: #63b3ed;
+                --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+                --focus-ring: 0 0 0 3px rgba(66, 153, 225, 0.5);
+            }
+        }
 
+        /* Explicit Attribute Dark Theme Core Drivers (Retained for Trigger Fallbacks) */
+        [data-theme="dark"] {
+            --bg-body: #1e222b;
+            --bg-card: #252b36;
+            --bg-input: #2e3543;
             --bg-secondary: #363f52;
             --bg-secondary-hover: #434e66;
             --bg-secondary-active: #515e7a;
             --bg-results: #2a313e;
             --border-color: #515e7a;
             --border-results: #363f52;
-            
-//            --bg-body: #12141c;
-//            --bg-card: #1a1d24;
-//            --bg-input: #242936;
-//             --bg-secondary: #2d3345;
-//             --bg-secondary-hover: #3b4356;
-//             --bg-secondary-active: #4a556d;
-//             --bg-results: #202430;
-//             --border-color: #4a556d;
-//             --border-results: #2d3345;
-
-            --text-primary: #f1f5f9;      /* Off-white text to eliminate glare */
-            --text-secondary: #cbd5e1;    /* Highly readable subtext */
-            --text-muted: #94a3b8;        /* Soft gray for notes and versioning */
-            
-//            --text-primary: #f7fafc;
-//            --text-secondary: #e2e8f0;
-//            --text-muted: #a0aec0;
-            
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
             --brand-primary: #4299e1;
             --brand-primary-hover: #3182ce;
             --brand-highlight: #63b3ed;
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             --focus-ring: 0 0 0 3px rgba(66, 153, 225, 0.5);
         }
+
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-body);
@@ -123,8 +125,20 @@
         h2 { font-size: 24px; }
         h3 { font-size: 18px; }
 
+        .title-stack {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .header-actions-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .form-group { margin-bottom: 22px; }
-        
+
         .label-row {
             display: flex;
             justify-content: space-between;
@@ -156,7 +170,7 @@
         .prefix { left: 14px; }
         .suffix { right: 14px; }
         
-        input[type="number"], textarea {
+        input[type="number"], input[type="text"], textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid var(--border-color);
@@ -225,18 +239,20 @@
         .step-btn:hover { background: var(--bg-secondary-hover); }
         .step-btn:active { background: var(--bg-secondary-active); }
         .step-btn.up { border-bottom: 1px solid var(--border-color); }
+
         /* Shortcut UI Controls Styles */
         .btn-shortcut-group { display: flex; gap: 8px; margin-top: 8px; }
         .btn-shortcut {
             background-color: var(--bg-secondary);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            padding: 8px;
+            padding: 8px 6px;
             font-size: 13px;
             font-weight: 500;
             border-radius: 4px;
             cursor: pointer;
             transition: var(--transition);
+            flex: 1;
         }
         .btn-shortcut:hover {
             background-color: var(--bg-secondary-hover);
@@ -269,7 +285,7 @@
             color: var(--text-primary);
         }
         .hint { font-size: 12px; color: var(--text-muted); margin-top: 5px; display: block; }
-        
+
         /* Layout Actions & Global Controls Styles */
         .action-buttons { display: flex; gap: 14px; margin-top: 24px; }
         .btn-main {
@@ -302,6 +318,23 @@
         }
         .btn-theme-toggle:hover { background: var(--bg-secondary); }
 
+        .btn-help-trigger {
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+            border-radius: var(--radius-inner);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-help-trigger:hover {
+            background-color: var(--bg-secondary-hover);
+            color: var(--text-primary);
+        }
+
         /* History Storage UI Styling Elements */
         .history-list { max-height: 380px; overflow-y: auto; margin-top: 12px; flex-grow: 1; padding-right: 4px; }
         .history-item {
@@ -329,7 +362,58 @@
         .toast { background: #2d3748; color: #fff; padding: 12px 20px; border-radius: var(--radius-inner); box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 14px; font-weight: 500; display: flex; align-items: center; transform: translateY(100px); opacity: 0; animation: slideIn 0.3s forwards, fadeOutToast 0.3s forwards 3.7s; pointer-events: none; }
         [data-theme="dark"] .toast { background: #edf2f7; color: #1a202c; }
 
+        /* Help Modal System Overlay Grid Rules */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            justify-content: center; align-items: center; padding: 20px;
+        }
+        .modal-card {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            max-width: 650px; width: 100%; max-height: 85vh;
+            border-radius: var(--radius-main); box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            display: flex; flex-direction: column;
+            animation: fadeInModal 0.2s ease;
+        }
+        .modal-header { padding: 16px 24px; border-bottom: 1px solid var(--border-results); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { margin: 0; font-size: 1.25rem; color: var(--brand-primary); }
+        .btn-close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; line-height: 1; padding: 4px 8px; border-radius: var(--radius-inner); transition: var(--transition); }
+        .btn-close-modal:hover { color: var(--brand-danger); background-color: var(--bg-secondary-hover); }
+        .modal-body { padding: 24px; overflow-y: auto; font-size: 0.95rem; line-height: 1.6; }
+        .modal-body h4 { margin-top: 24px; margin-bottom: 8px; color: var(--text-primary); border-bottom: 1px solid var(--border-results); padding-bottom: 4px; }
+        .modal-body h4:first-of-type { margin-top: 0; }
+        .modal-body ul { margin: 0 0 16px 0; padding-left: 20px; }
+        .modal-body li { margin-bottom: 8px; }
+        .modal-body strong { color: var(--text-primary); }
+        .help-table { width: 100%; border-collapse: collapse; margin: 12px 0 20px 0; font-size: 0.85rem; }
+        .help-table th, .help-table td { border: 1px solid var(--border-color); padding: 8px 12px; text-align: left; }
+        .help-table th { background-color: var(--bg-secondary); color: var(--text-primary); }
+
+        /* Integrated Custom Mini Calculator Box Engine Overlay Variables */
+        .mini-calc-grid button {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: var(--radius-inner);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .mini-calc-grid button:hover { background-color: var(--bg-secondary-hover); }
+        .mini-calc-grid button:active { background-color: var(--bg-secondary-active); }
+        .mini-calc-grid button.op-btn { background-color: var(--brand-primary); color: white; }
+        .mini-calc-grid button.op-btn:hover { background-color: var(--brand-primary-hover); }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInModal { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
         @keyframes slideIn { to { transform: translateY(0); opacity: 1; } }
         @keyframes fadeOutToast { to { opacity: 0; transform: translateY(-20px); } }
 
@@ -348,7 +432,7 @@
         /* Dedicated System Media-Print Core Overrides */
         @media print {
             body { background: white !important; color: black !important; padding: 0; }
-            .history-card, .btn-shortcut-group, .action-buttons, .btn-theme-toggle, .step-btn-group, .hint { display: none !important; }
+            .history-card, .btn-shortcut-group, .action-buttons, .btn-theme-toggle, .btn-help-trigger, .step-btn-group, .hint, .modal-overlay, #miniCalcModal { display: none !important; }
             .calculator-card { box-shadow: none !important; padding: 0 !important; max-width: 100% !important; }
             .stepper-container { border: none !important; }
             input, textarea { border: none !important; padding: 6px 0 !important; background: transparent !important; color: black !important; }
@@ -356,186 +440,39 @@
             .results-section { border: 1px solid #000 !important; background: transparent !important; }
             .result-row { color: black !important; }
         }
-
-        /* --- HELP MODAL OVERLAY STYLES --- */
-        .modal-overlay {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Dimmed backdrop */
-            backdrop-filter: blur(4px); /* Modern frosted-glass effect */
-            z-index: 2000; /* Ensures it sits on top of everything */
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-card {
-            background-color: var(--bg-card);
-            color: var(--text-primary);
-            max-width: 650px;
-            width: 100%;
-            max-height: 85vh; /* Prevents card from spilling off screen */
-            border-radius: var(--radius-main);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            animation: fadeInModal 0.2s ease;
-        }
-
-        @keyframes fadeInModal {
-            from { opacity: 0; transform: scale(0.96); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .modal-header {
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--border-results);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h3 {
-            margin: 0;
-            font-size: 1.25rem;
-            color: var(--brand-primary);
-        }
-
-        .btn-close-modal {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-            line-height: 1;
-            padding: 4px 8px;
-            border-radius: var(--radius-inner);
-            transition: var(--transition);
-        }
-
-        .btn-close-modal:hover {
-            color: var(--brand-danger);
-            background-color: var(--bg-secondary-hover);
-        }
-
-        .modal-body {
-            padding: 24px;
-            overflow-y: auto; /* Adds a clean scrollbar inside the card if text is long */
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        /* Typography styles inside the user guide */
-        .modal-body h4 {
-            margin-top: 24px;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-            border-bottom: 1px solid var(--border-results);
-            padding-bottom: 4px;
-        }
-        .modal-body h4:first-of-type { margin-top: 0; }
-
-        .modal-body ul {
-            margin: 0 0 16px 0;
-            padding-left: 20px;
-        }
-
-        .modal-body li {
-            margin-bottom: 8px;
-        }
-
-        .modal-body strong {
-            color: var(--text-primary);
-        }
-
-        /* Layout for the Help Button in Header Row */
-        .header-actions-group {
-            display: flex;
-            align-items: center;
-            gap: 12px; /* Spaces the HELP button and 🌓 toggle nicely */
-        }
-
-        .btn-help-trigger {
-            background-color: var(--bg-secondary);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            letter-spacing: 0.05em;
-            border-radius: var(--radius-inner);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .btn-help-trigger:hover {
-            background-color: var(--bg-secondary-hover);
-            color: var(--text-primary);
-        }
-
-        /* Help-specific data table layout */
-        .help-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 12px 0 20px 0;
-            font-size: 0.85rem;
-        }
-        .help-table th, .help-table td {
-            border: 1px solid var(--border-color);
-            padding: 8px 12px;
-            text-align: left;
-        }
-        .help-table th {
-            background-color: var(--bg-secondary);
-            color: var(--text-primary);
-        }
-
-        /* Ensure the help pop-up NEVER prints out on paper receipts */
-        @media print {
-            .modal-overlay { display: none !important; }
-        }
-  
     </style>
 </head>
 <body>
 
 <div class="container" role="main">
-
-    
     <!-- Main Interactive Form Card Block -->
     <div class="calculator-card">
-
-
-                <div class="header-row" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <!-- Stacked Title Group (Prevents shifting) -->
-                <div class="title-stack" style="display: flex; flex-direction: column; text-align: left;">
-                    <h2 style="margin: 0;">Bill Calculator</h2>
-                    <p id="version-subtitle" style="font-size: 0.75rem; color: var(--text-muted); margin: 4px 0 0 0;"></p>
-                </div>
-        
-                <!-- Grouped Utility Actions -->
-                <div class="header-actions-group" style="display: flex; align-items: center; gap: 12px;">
-                    <button id="helpToggle" class="btn-help-trigger" title="Open User Guide">HELP</button>
-                    <button id="themeToggle" class="btn-theme-toggle" aria-label="Toggle dark and light application theme" title="Toggle Display Theme">🌓</button>
-                </div>
+        <div class="header-row">
+            <div class="title-stack">
+                <h2>Bill Calculator</h2>
+                <p id="version-subtitle" style="font-size: 0.75rem; color: var(--text-muted); margin: 4px 0 0 0;"></p>
             </div>
-        
-        <!-- Base Input Component Group: Meal Cost -->
+            <div class="header-actions-group">
+                <button id="helpToggle" class="btn-help-trigger" title="Open User Guide">HELP</button>
+                <button id="themeToggle" class="btn-theme-toggle" aria-label="Toggle dark and light application theme" title="Toggle Display Theme">🌓</button>
+            </div>
+        </div>
+
+        <!-- Enhanced Base Input Component Group: Meal Cost / Sub-Total -->
         <div class="form-group">
             <div class="label-row">
                 <label for="mealCost">
                     Bill Sub-Total <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">(Meal Cost + Taxes)</span>
-                </label>         
+                </label>
             </div>
-            <div class="input-wrapper">
-                <span class="prefix" aria-hidden="true">$</span>
-                <input type="number" id="mealCost" class="has-prefix" step="0.01" min="0" placeholder="0.00" aria-required="true">
+            <div style="display: flex; gap: 8px;">
+                <div class="input-wrapper" style="flex: 1;">
+                    <span class="prefix" aria-hidden="true">$</span>
+                    <input type="text" id="mealCost" class="has-prefix" placeholder="0.00 or 45.5 12.75 -8" aria-required="true" onblur="autoSumMealCost()">
+                </div>
+                <button class="btn-shortcut" onclick="openMiniCalc()" style="margin-top: 0; padding: 0 16px; font-weight: bold; flex: none; background-color: var(--brand-primary); color: white; border-color: var(--brand-primary-hover);">CALC</button>
             </div>
+            <small class="hint">Tip: Enter multiple amounts separated by spaces (e.g. 45.50 12.75 -8). Use CALC button for arithmetic.</small>
         </div>
 
         <!-- Custom Input Component Group: Credit Card Surcharge Rate -->
@@ -595,7 +532,7 @@
             </div>
         </div>
 
-        <!-- NEW COMPONENT: Tip Override Minimum Dollar Guardrail -->
+        <!-- Tip Override Minimum Dollar Guardrail -->
         <div class="form-group">
             <div class="label-row">
                 <label for="tipOverride">Tip Override (Minimum Dollar Amount)</label>
@@ -630,7 +567,6 @@
             <label for="billNotes">Notes</label>
             <textarea id="billNotes" rows="5" placeholder="Enter dining notes, restaurant name, or split details..."></textarea>
         </div>
-
         <!-- Computational Aggregations Output Metrics Panel -->
         <div class="results-section" aria-live="polite">
             <div class="result-row">
@@ -660,7 +596,7 @@
             </div>
         </div>
 
-        <!-- Process Actions Layout Wrapper (Clear Button Included) -->
+        <!-- Process Actions Layout Wrapper -->
         <div class="action-buttons">
             <button class="btn-main btn-save" onclick="saveToHistory()" aria-label="Commit current ledger metrics to regional persistent vault">Save History</button>
             <button class="btn-main" style="background-color: var(--brand-danger); color: white;" onclick="clearMainForm()" aria-label="Clear all current inputs and reset workspace">Clear</button>
@@ -686,7 +622,98 @@
 </div>
 
 <div class="toast-container" id="toastContainer" aria-live="assertive" aria-atomic="true"></div>
+
+<!-- MINI CALCULATOR MODAL OVERLAY -->
+<div id="miniCalcModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:3000; justify-content:center; align-items:center; backdrop-filter:blur(4px);">
+    <div style="background:var(--bg-card); padding:24px; border-radius:12px; width:320px; border:1px solid var(--border-color); box-shadow:var(--shadow);">
+        <input id="calcDisplay" readonly style="width:100%; font-size:28px; text-align:right; margin-bottom:16px; font-family:monospace; padding:8px; border-radius:var(--radius-inner); background-color:var(--bg-results); border:1px solid var(--border-color); color:var(--text-primary);" value="0">
+        <div class="mini-calc-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+            <button onclick="calcInput('7')">7</button>
+            <button onclick="calcInput('8')">8</button>
+            <button onclick="calcInput('9')">9</button>
+            <button class="op-btn" onclick="calcOp('/')">/</button>
+            
+            <button onclick="calcInput('4')">4</button>
+            <button onclick="calcInput('5')">5</button>
+            <button onclick="calcInput('6')">6</button>
+            <button class="op-btn" onclick="calcOp('*')">*</button>
+            
+            <button onclick="calcInput('1')">1</button>
+            <button onclick="calcInput('2')">2</button>
+            <button onclick="calcInput('3')">3</button>
+            <button class="op-btn" onclick="calcOp('-')">-</button>
+            
+            <button onclick="calcInput('0')">0</button>
+            <button onclick="calcInput('.')">.</button>
+            <button class="op-btn" style="background-color:var(--brand-danger);" onclick="document.getElementById('calcDisplay').value='0'; calcPrevious=0; calcOperator=null;">C</button>
+            <button class="op-btn" onclick="calcOp('+')">+</button>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:14px;">
+            <button class="btn-main" style="background:var(--bg-secondary); color:var(--text-primary); border:1px solid var(--border-color); font-size:14px; padding:10px;" onclick="closeMiniCalc()">Cancel</button>
+            <button class="btn-main btn-save" style="font-size:14px; padding:10px;" onclick="calcEquals()">= Accept</button>
+        </div>
+    </div>
+</div>
+
+<!-- GLOBAL MODAL: USER GUIDE & QUICK REFERENCE -->
+<div id="helpModal" class="modal-overlay" aria-hidden="true" role="dialog">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>📖 User Guide & Quick Reference</h3>
+            <button id="closeModal" class="btn-close-modal" aria-label="Close user guide">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="margin-top:0; color: var(--text-secondary); font-style: italic;">
+                Welcome to your offline-first, group-optimized billing workspace. This guide explains how to use the calculator's advanced rounding engines, custom shortcuts, and server protection guardrails.
+            </p>
+
+            <h4>🚀 Quick Start Guide</h4>
+            <ul>
+                <li><strong>Open the App:</strong> Double-click your saved .html file which will run within your web browser.</li>
+                <li><strong>Enter the Meal Cost:</strong> Type the base receipt subtotal (Meal + Tax) into the Meal Cost box. You can separate multiple items by a single space.</li>
+                <li><strong>Set the Rates:</strong> Adjust your credit card fee and target tip using the quick-select percentage buttons.</li>
+                <li><strong>Split the Bill (Optional):</strong> Change the Number of People field to instantly divide the total.</li>
+                <li><strong>Log & Clear:</strong> Click Save History to log the receipt to your sidebar, then click Clear to wipe the board for your next meal.</li>
+            </ul>
+
+            <h4>🛠️ Inputs & Advanced Controls</h4>
+            <ul>
+                <li><strong>💳 Credit Card Surcharge Rate (Default 0.0%):</strong> Quick Presets: 1%, 2%, 3%. Math Behavior: This surcharge is dynamically applied to the combined subtotal of the food and the finalized tip, perfectly mirroring modern retail merchant processors.</li>
+                <li><strong>💰 Desired Tip Percentage (Default 18.0%):</strong> Prefilled on launch. Quick Presets: 15%, 18%, 20%. Math Behavior: Serves as your ideal baseline target. The rounding engine will dynamically pivot off this number to secure your whole-dollar totals.</li>
+                <li><strong>🛡️ Tip Override (Minimum Dollar Amount - Default $0):</strong> Acts as an unconditional cash floor for the server. Perfect for small bills (e.g., a $4 coffee where an 18% tip is only pennies, but you want to leave a flat $2), or if you prefer to tip a specific flat cash amount regardless of bill percentages.</li>
+                <li><strong>👥 Number of People (Split - Default 1):</strong> Dictates whether the calculator targets a whole-dollar Grand Total (Party Size = 1) or a whole-dollar Per-Person Share (Party Size > 1).</li>
+            </ul>
+
+            <h4>🔬 How Version 5g Protects Your Server</h4>
+            <p style="color: var(--text-secondary); margin-bottom: 8px;">Traditional bill-splitting tools round down blindly, which aggressively shortchanges waitstaff as groups grow. Version 5g introduces Tip Protection Layout Metrics:</p>
+            <ul>
+                <li><strong>🚫 The -1.0% Downside Variance Guardrail:</strong> When splitting, the application runs a trial calculation by rounding the individual share to the closest dollar. It then cross-checks what that round does to the server's tip percentage. If a downward round causes the Effective Tip Rate to drop more than 1.0% below your Desired Tip, the guardrail instantly overrides standard rounding and forces the calculation to round UP to the next whole dollar instead.</li>
+                <li><strong>🛑 The Override Floor Enforcement:</strong> If a downward round attempts to drop the total tip amount below the value specified in your Tip Override box, the calculator blocks the downward slide and forces an upward round to keep that cash floor fully locked.</li>
+            </ul>
+
+            <h4>⚡ Power-User Keyboard Shortcuts & Navigation</h4>
+            <p style="color: var(--text-secondary); margin-bottom: 4px;">Speed up data entry and navigate the app using built-in system tools:</p>
+            <table class="help-table">
+                <thead>
+                    <tr>
+                        <th>Control / Shortcut</th>
+                        <th>Action</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 <script>
+// Global Engine Bootstrap Handlers
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. UNIFIED METADATA VARIABLE INJECTION
+    const APP_NAME = "Calc-TIP";
+    const APP_VERSION = "GROK v5g";
+    const FULL_TITLE = `${APP_NAME} ${APP_VERSION}`;
+
+    const titleEl = document.getElementById("app-title");
+    const subtitleEl = document.getElementById("version-subtitle");
+    if (titleEl) titleEl.textContent = FULL_TITLE;
+    if (subtitleEl) subtitleEl.textContent = FULL_TITLE;
+
     // Component Registry Selector Mapping
     const mealCostInput = document.getElementById('mealCost');
     const surchargeRateInput = document.getElementById('surchargeRate');
@@ -708,124 +735,120 @@
     const historyToggle = document.getElementById('historyToggle');
     const themeToggle = document.getElementById('themeToggle');
     const toastContainer = document.getElementById('toastContainer');
+    const helpModal = document.getElementById('helpModal');
+    const helpToggleBtn = document.getElementById('helpToggle');
+    const closeModalBtn = document.getElementById('closeModal');
 
     // Functional State Domain Constants
     const INPUT_CAP_MAX = 1000000;
 
-    // --- Architecture Upgraded v5c: Dual-Mode Tip Protection Engine ---
+    // Global Exposure of Helper Macros for Inline Button Triggers
+    window.adjustValue = function(id, amount) {
+        const input = document.getElementById(id);
+        if (!input) return;
+        let val = parseFloat(input.value) || 0;
+        val = Math.max(0, parseFloat((val + amount).toFixed(1)));
+        input.value = (id === 'partySize') ? Math.max(1, Math.round(val)) : val;
+        calculateBill();
+    };
+
+    window.setPreset = function(id, val) {
+        const input = document.getElementById(id);
+        if (input) {
+            input.value = val.toFixed(1);
+            calculateBill();
+        }
+    };
+
+    window.clearMainForm = function() {
+        mealCostInput.value = '';
+        surchargeRateInput.value = '0.0';
+        desiredTipPctInput.value = '18.0';
+        tipOverrideInput.value = '0';
+        partySizeInput.value = '1';
+        billNotesInput.value = '';
+        resetOutputs();
+        mealCostInput.focus();
+        showToast("Calculator workspace completely reset.");
+    };
+
+    // Space-Separated Value Text Arithmetic Parser Matrix
+    window.autoSumMealCost = function() {
+        const text = mealCostInput.value.trim();
+        if (!text) return;
+        const numbers = text.match(/-?\d*\.?\d+/g) || [];
+        const sum = numbers.reduce((acc, num) => acc + parseFloat(num), 0);
+        mealCostInput.value = sum > 0 ? sum.toFixed(2) : '';
+        calculateBill();
+    };
+
+    // Core Dual-Mode Tip Protection Calculation Track Matrix
     function computeBillMetrics(mealCost, surchargeRate, desiredTipPct, tipOverrideAmt = 0, partySize = 1) {
         if (mealCost <= 0) {
             return { mealCost: 0, surchargeAmt: 0, adjustedTipAmt: 0, effectiveTipPct: 0, evenTotal: 0, splitShare: 0 };
         }
-
         const surchargeMult = 1 + (surchargeRate / 100);
-        
-        // 1. Establish the absolute baseline tip target from percentage
         const pctTipAmt = mealCost * (desiredTipPct / 100);
-        
-        // 2. Determine base tip target by choosing the greater of % vs flat override floor
         const targetBaseTipAmt = Math.max(pctTipAmt, tipOverrideAmt);
-        
-        // 3. Compute the raw unrounded target grand total
         const rawTotal = (mealCost + targetBaseTipAmt) * surchargeMult;
-        
-        let splitShare = 0;
-        let forceRoundUp = false;
 
         if (partySize <= 1) {
-            // MODE A: Standard Individual Rounding Track
             let evenTotalTrial = Math.round(rawTotal);
             let checkTip = parseFloat(((evenTotalTrial / surchargeMult) - mealCost).toFixed(2));
-            let checkEffectivePct = mealCost > 0 ? (checkTip / mealCost) * 100 : 0;
-
-            // Trigger Guardrail A: If downward round causes effective tip to drop more than -1% below target
+            let checkEffectivePct = (checkTip / mealCost) * 100;
             if ((checkEffectivePct - desiredTipPct) < -1.0 || checkTip < tipOverrideAmt) {
                 evenTotalTrial = Math.ceil(rawTotal);
             }
-
-            // Assert baseline absolute safety minimum floor
-            const minimumRequired = Math.ceil(mealCost * surchargeMult);
-            const absoluteFloor = Math.ceil((mealCost + tipOverrideAmt) * surchargeMult);
-            const strictFloor = Math.max(minimumRequired, absoluteFloor);
-            
-            if (evenTotalTrial < strictFloor) {
-                evenTotalTrial = strictFloor;
-            }
+            const strictFloor = Math.max(Math.ceil(mealCost * surchargeMult), Math.ceil((mealCost + tipOverrideAmt) * surchargeMult));
+            if (evenTotalTrial < strictFloor) evenTotalTrial = strictFloor;
 
             const finalTip = parseFloat(((evenTotalTrial / surchargeMult) - mealCost).toFixed(2));
-            const finalEffectivePct = mealCost > 0 ? ((finalTip / mealCost) * 100).toFixed(1) : 0;
+            const finalEffectivePct = (finalTip / mealCost) * 100;
             const finalSurcharge = parseFloat((evenTotalTrial - mealCost - finalTip).toFixed(2));
-
-            return { mealCost, surchargeAmt: finalSurcharge, adjustedTipAmt: finalTip, effectiveTipPct: parseFloat(finalEffectivePct), evenTotal: evenTotalTrial, splitShare: evenTotalTrial };
+            return { mealCost, surchargeAmt: finalSurcharge, adjustedTipAmt: finalTip, effectiveTipPct: finalEffectivePct, evenTotal: evenTotalTrial, splitShare: evenTotalTrial };
         } else {
-            // MODE B: Individual Whole-Dollar Group Balancing Track
             const rawIndividualShare = rawTotal / partySize;
             let splitShareTrial = Math.round(rawIndividualShare);
-
-            // Back-test what this trial share does to our grand total and server tip
             let evenTotalTrial = splitShareTrial * partySize;
             let checkTip = parseFloat(((evenTotalTrial / surchargeMult) - mealCost).toFixed(2));
-            let checkEffectivePct = mealCost > 0 ? (checkTip / mealCost) * 100 : 0;
-
-            // Trigger Guardrail B: Check if standard round breached -1% variance limit OR tip override floor
+            let checkEffectivePct = (checkTip / mealCost) * 100;
             if ((checkEffectivePct - desiredTipPct) < -1.0 || checkTip < tipOverrideAmt) {
                 splitShareTrial = Math.ceil(rawIndividualShare);
             }
-
-            // Assert absolute system floor bounds to secure minimum legal invoice totals
-            const minimumRequiredTotal = Math.ceil(mealCost * surchargeMult);
-            const absoluteFloorTotal = Math.ceil((mealCost + tipOverrideAmt) * surchargeMult);
-            const strictFloorTotal = Math.max(minimumRequiredTotal, absoluteFloorTotal);
+            const strictFloorTotal = Math.max(Math.ceil(mealCost * surchargeMult), Math.ceil((mealCost + tipOverrideAmt) * surchargeMult));
             const minimumIndividualShare = Math.ceil(strictFloorTotal / partySize);
-            
-            if (splitShareTrial < minimumIndividualShare) {
-                splitShareTrial = minimumIndividualShare;
-            }
+            if (splitShareTrial < minimumIndividualShare) splitShareTrial = minimumIndividualShare;
 
-            // Project finalized parameters out to compute active layout fields
             const finalizedGrandTotal = splitShareTrial * partySize;
             const finalTip = parseFloat(((finalizedGrandTotal / surchargeMult) - mealCost).toFixed(2));
-            const finalEffectivePct = mealCost > 0 ? ((finalTip / mealCost) * 100).toFixed(1) : 0;
+            const finalEffectivePct = (finalTip / mealCost) * 100;
             const finalSurcharge = parseFloat((finalizedGrandTotal - mealCost - finalTip).toFixed(2));
-
-            return { mealCost, surchargeAmt: finalSurcharge, adjustedTipAmt: finalTip, effectiveTipPct: parseFloat(finalEffectivePct), evenTotal: finalizedGrandTotal, splitShare: splitShareTrial };
+            return { mealCost, surchargeAmt: finalSurcharge, adjustedTipAmt: finalTip, effectiveTipPct: finalEffectivePct, evenTotal: finalizedGrandTotal, splitShare: splitShareTrial };
         }
     }
-    // --- Controller & UI Presentation Layers ---
+
     function calculateBill() {
-        // Enforce input sanitize rules & threshold upper boundary caps
         let mealCost = Math.max(0, parseFloat(mealCostInput.value) || 0);
         let surchargeRate = Math.max(0, parseFloat(surchargeRateInput.value) || 0);
         let desiredTipPct = Math.max(0, parseFloat(desiredTipPctInput.value) || 0);
         let tipOverrideAmt = Math.max(0, parseFloat(tipOverrideInput.value) || 0);
         let partySize = Math.max(1, parseInt(partySizeInput.value, 10) || 1);
 
-        if (mealCost > INPUT_CAP_MAX) { 
-            mealCost = INPUT_CAP_MAX; 
-            mealCostInput.value = INPUT_CAP_MAX; 
-            showToast("Input clamped to system maximum cap limit."); 
-        }
+        if (mealCost > INPUT_CAP_MAX) { mealCost = INPUT_CAP_MAX; mealCostInput.value = INPUT_CAP_MAX; showToast("Input clamped to maximum cap."); }
         if (surchargeRate > 100) { surchargeRate = 100; surchargeRateInput.value = 100; }
         if (desiredTipPct > 500) { desiredTipPct = 500; desiredTipPctInput.value = 500; }
         if (tipOverrideAmt > INPUT_CAP_MAX) { tipOverrideAmt = INPUT_CAP_MAX; tipOverrideInput.value = INPUT_CAP_MAX; }
         if (partySize > 1000) { partySize = 1000; partySizeInput.value = 1000; }
 
-        // Pass configuration metrics down to calculation engine
         const metrics = computeBillMetrics(mealCost, surchargeRate, desiredTipPct, tipOverrideAmt, partySize);
+        if (metrics.evenTotal === 0) { resetOutputs(); return; }
 
-        if (metrics.evenTotal === 0) {
-            resetOutputs();
-            return;
-        }
-
-        // Output matrix injection layout rendering
         outMeal.textContent = `$${metrics.mealCost.toFixed(2)}`;
         outSurcharge.textContent = `$${metrics.surchargeAmt.toFixed(2)}`;
         outTip.textContent = `$${metrics.adjustedTipAmt.toFixed(2)}`;
         outEffectiveTip.textContent = `${metrics.effectiveTipPct.toFixed(1)}%`;
         outTotal.textContent = `$${metrics.evenTotal.toFixed(2)}`;
 
-        // Party dividend allocation splitting evaluation
         if (partySize > 1) {
             outSplitShare.textContent = `$${metrics.splitShare.toFixed(2)}`;
             splitTotalRow.style.display = 'flex';
@@ -835,393 +858,120 @@
     }
 
     function resetOutputs() {
-        outMeal.textContent = '$0.00';
-        outSurcharge.textContent = '$0.00';
-        outTip.textContent = '$0.00';
-        outEffectiveTip.textContent = '0.0%';
-        outTotal.textContent = '$0.00';
-        splitTotalRow.style.display = 'none';
+        outMeal.textContent = '$0.00'; outSurcharge.textContent = '$0.00'; outTip.textContent = '$0.00';
+        outEffectiveTip.textContent = '0.0%'; outTotal.textContent = '$0.00'; splitTotalRow.style.display = 'none';
     }
-
-    // Workspace Clear Button Execution Handler
-    function clearMainForm() {
-        mealCostInput.value = '';
-        surchargeRateInput.value = '0.0';
-        desiredTipPctInput.value = '18.0';
-        tipOverrideInput.value = '0';
-        partySizeInput.value = '1';
-        billNotesInput.value = '';
-        
-        resetOutputs();
-        mealCostInput.focus();
-        showToast("Calculator workspace completely reset.");
-    }
-
-    // Custom Incremental Input Modifier Interceptor Engine
-    function adjustValue(id, amount) {
-        const input = document.getElementById(id);
-        let val = parseFloat(input.value) || 0;
-        val = Math.max(0, parseFloat((val + amount).toFixed(1)));
-        input.value = (id === 'partySize') ? Math.max(1, Math.round(val)) : val;
-        calculateBill();
-    }
-
-    function setPreset(id, val) {
-        document.getElementById(id).value = val.toFixed(1);
-        calculateBill();
-    }
-    // --- Interactive Notification Engine ---
     function showToast(message) {
         const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.setAttribute('role', 'alert');
-        toast.textContent = message;
+        toast.className = 'toast'; toast.setAttribute('role', 'alert'); toast.textContent = message;
         toastContainer.appendChild(toast);
         setTimeout(() => { toast.remove(); }, 4000);
     }
 
-    // --- Data Layer Architecture: Local Storage Persistent Registries ---
-    function getStoredHistory() {
-        try {
-            return JSON.parse(localStorage.getItem('billCalcHistory')) || [];
-        } catch {
-            return [];
+    // Storage Infrastructure Layer Configuration Management Handles
+    window.saveToHistory = function() {
+        const total = outTotal.textContent;
+        if (total === '$0.00') return;
+        const partySize = parseInt(partySizeInput.value, 10) || 1;
+        const historyData = getStoredHistory();
+        const newRecord = {
+            id: Date.now().toString(),
+            timestamp: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+            meal: outMeal.textContent, surcharge: outSurcharge.textContent, tip: outTip.textContent,
+            effectiveTip: outEffectiveTip.textContent, total: total, partySize: partySize,
+            splitShare: outSplitShare.textContent, notes: billNotesInput.value.trim()
+        };
+        historyData.unshift(newRecord);
+        localStorage.setItem('billCalcHistory', JSON.stringify(historyData));
+        renderHistoryUI();
+        showToast("Record successfully written to local ledger storage profile.");
+    };
+
+    window.clearAllHistory = function() {
+        if (confirm("Are you sure you want to permanently purge all saved table records? This data layer operation cannot be reversed.")) {
+            localStorage.removeItem('billCalcHistory'); renderHistoryUI();
+            showToast("Workspace history index logs completely erased.");
         }
-    }
+    };
+
+    window.exportData = function(format) {
+        const historyData = getStoredHistory();
+        if (historyData.length === 0) { showToast("Transfer matrix is empty."); return; }
+        let outputStr = '', mimeType = 'text/plain', fileExtension = 'txt';
+        if (format === 'json') {
+            outputStr = JSON.stringify(historyData, null, 2); mimeType = 'application/json'; fileExtension = 'json';
+        } else if (format === 'csv') {
+            const columns = ['ID', 'Timestamp', 'Meal Cost', 'Surcharge', 'Tip', 'Effective Tip %', 'Total Bill', 'Party Size', 'Share', 'Notes'];
+            const rows = historyData.map(r => [r.id, r.timestamp, r.meal, r.surcharge, r.tip, r.effectiveTip, r.total, r.partySize, r.splitShare, `"${(r.notes || '').replace(/"/g, '""')}"`]);
+            outputStr = [columns.join(','), ...rows.map(row => row.join(','))].join('\n'); mimeType = 'text/csv'; fileExtension = 'csv';
+        }
+        const blob = new Blob([outputStr], { type: `${mimeType};charset=utf-8;` });
+        const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
+        link.setAttribute("download", `bill_history_export_${Date.now()}.${fileExtension}`);
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    };
+
+    function getStoredHistory() { try { return JSON.parse(localStorage.getItem('billCalcHistory')) || []; } catch { return []; } }
+    function escapeHtml(str) { return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
 
     function renderHistoryUI() {
         const historyData = getStoredHistory();
-        if (historyData.length === 0) {
-            historyList.innerHTML = '<div class="empty-history" role="status">No records found within current workspace profile.</div>';
-            return;
-        }
-
+        if (historyData.length === 0) { historyList.innerHTML = '<div class="empty-history">No records found.</div>'; return; }
         historyList.innerHTML = '';
         historyData.forEach((record) => {
-            const item = document.createElement('div');
-            item.className = 'history-item';
-            
+            const item = document.createElement('div'); item.className = 'history-item';
             let notesHtml = record.notes ? `<div class="history-item-notes">${escapeHtml(record.notes)}</div>` : '';
-            let splitHtml = record.partySize > 1 ? `<div style="color: var(--brand-highlight);">Split [${record.partySize} ways]: ${record.splitShare} each</div>` : '';
-
-            item.innerHTML = `
-                <div class="history-item-header">
-                    <span>Total: ${record.total}</span>
-                    <span style="font-weight: normal; font-size: 11px; color: var(--text-muted);">${record.timestamp}</span>
-                </div>
-                <div>Meal: ${record.meal} | Tip: ${record.tip} (${record.effectiveTip})</div>
-                ${splitHtml}
-                ${notesHtml}
-            `;
+            let splitHtml = record.partySize > 1 ? `<div style="color:var(--brand-highlight);">Split [${record.partySize} ways]: $${record.splitShare} each</div>` : '';
+            item.innerHTML = `<div class="history-item-header"><span>Total: ${record.total}</span><span style="font-weight:normal; font-size:11px; color:var(--text-muted);">${record.timestamp}</span></div><div>Meal: ${record.meal} | Tip: ${record.tip} (${record.effectiveTip})</div>${splitHtml}${notesHtml}`;
             historyList.appendChild(item);
         });
     }
 
-    function saveToHistory() {
-        const total = outTotal.textContent;
-        if (total === '$0.00') return;
+    // 2. INTEGRATED MINI CALCULATOR LOGIC ENGINE
+    let calcPrevious = 0; let calcOperator = null;
+    window.openMiniCalc = function() { document.getElementById('miniCalcModal').style.display = 'flex'; document.getElementById('calcDisplay').value = '0'; };
+    window.closeMiniCalc = function() { document.getElementById('miniCalcModal').style.display = 'none'; };
+    window.calcInput = function(num) { const d = document.getElementById('calcDisplay'); d.value = d.value === '0' && num !== '.' ? num : d.value + num; };
+    window.calcOp = function(op) { const d = document.getElementById('calcDisplay'); calcPrevious = parseFloat(d.value) || 0; calcOperator = op; d.value = '0'; };
+    window.calcEquals = function() {
+        const d = document.getElementById('calcDisplay'); const current = parseFloat(d.value) || 0; let result = 0;
+        if (calcOperator === '+') result = calcPrevious + current;
+        else if (calcOperator === '-') result = calcPrevious - current;
+        else if (calcOperator === '*') result = calcPrevious * current;
+        else if (calcOperator === '/') result = current !== 0 ? calcPrevious / current : 0;
+        else result = current;
+        d.value = result; mealCostInput.value = result.toFixed(2); calculateBill();
+        setTimeout(closeMiniCalc, 500);
+    };
 
-        const partySize = parseInt(partySizeInput.value, 10) || 1;
-        const historyData = getStoredHistory();
-        
-        const newRecord = {
-            id: Date.now().toString(),
-            timestamp: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-            meal: outMeal.textContent,
-            surcharge: outSurcharge.textContent,
-            tip: outTip.textContent,
-            effectiveTip: outEffectiveTip.textContent,
-            total: total,
-            partySize: partySize,
-            splitShare: outSplitShare.textContent,
-            notes: billNotesInput.value.trim()
-        };
-
-        historyData.unshift(newRecord);
-        localStorage.setItem('billCalcHistory', JSON.stringify(historyData));
-        renderHistoryUI();
-        // billNotesInput.value = ''; // Retain notes on-screen as requested. Reset via Clear button.
-        showToast("Record successfully written to local ledger storage profile.");
+    // 3. USER GUIDE HELPER OVERLAY INTERACTION CONTROLLER
+    if (helpToggleBtn && helpModal && closeModalBtn) {
+        helpToggleBtn.addEventListener('click', function() { helpModal.style.display = 'flex'; helpModal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; });
+        closeModalBtn.addEventListener('click', closeModal);
+        helpModal.addEventListener('click', function(e) { if (e.target === helpModal) closeModal(); });
     }
+    function closeModal() { helpModal.style.display = 'none'; helpModal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
 
-    function clearAllHistory() {
-        if (confirm("Are you sure you want to permanently purge all saved table records? This data layer operation cannot be reversed.")) {
-            localStorage.removeItem('billCalcHistory');
-            renderHistoryUI();
-            showToast("Workspace history index logs completely erased.");
-        }
-    }
-
-    // --- File Serialization Marshalling Transforms (Export Framework) ---
-    function exportData(format) {
-        const historyData = getStoredHistory();
-        if (historyData.length === 0) {
-            showToast("Unable to execute transfer export: Current storage vector matrix is empty.");
-            return;
-        }
-
-        let outputStr = '';
-        let mimeType = 'text/plain';
-        let fileExtension = 'txt';
-
-        if (format === 'json') {
-            outputStr = JSON.stringify(historyData, null, 2);
-            mimeType = 'application/json';
-            fileExtension = 'json';
-        } else if (format === 'csv') {
-            const columns = ['ID', 'Timestamp', 'Meal Cost', 'Surcharge', 'Tip', 'Effective Tip %', 'Total Bill', 'Party Size', 'Share', 'Notes'];
-            const rows = historyData.map(r => [
-                r.id, r.timestamp, r.meal, r.surcharge, r.tip, r.effectiveTip, r.total, r.partySize, r.splitShare, `"${(r.notes || '').replace(/"/g, '""')}"`
-            ]);
-            outputStr = [columns.join(','), ...rows.map(row => row.join(','))].join('\n');
-            mimeType = 'text/csv';
-            fileExtension = 'csv';
-        }
-
-        const blob = new Blob([outputStr], { type: `${mimeType};charset=utf-8;` });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.setAttribute("download", `bill_history_export_${Date.now()}.${fileExtension}`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        showToast(`History ledger downloaded as file format: ${format.toUpperCase()}`);
-    }
-
-    function escapeHtml(str) {
-        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-    }
-
-    // --- Device Utility Input Handlers & Macro Monitors ---
+    // Macro Hotkey Window Command Matrix Monitoring
     window.addEventListener('keydown', (e) => {
-        // Macro Context Bindings: Ctrl + S to commit ledger
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
-            e.preventDefault();
-            saveToHistory();
-        }
-        // Macro Context Bindings: Ctrl + K to drop focus context on core cost
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-            e.preventDefault();
-            clearMainForm();
-        }
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); saveToHistory(); }
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); window.clearMainForm(); }
+        if (e.key === 'Escape' && helpModal.style.display === 'flex') closeModal();
     });
 
-    // Theme Custom Matrix Registry Drivers
-    function initTheme() {
-        const activeTheme = localStorage.getItem('appThemeConfig') || 'light';
-        document.documentElement.setAttribute('data-theme', activeTheme);
-    }
-
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', nextTheme);
-        localStorage.setItem('appThemeConfig', nextTheme);
-    });
-
-    // Mobile Responsive Target Component Accordion Controller
-    historyToggle.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
-            const isCollapsed = historyCard.classList.toggle('collapsed');
-            historyToggle.setAttribute('aria-expanded', !isCollapsed);
-        }
-    });
-
-    // App Workspace System Event Binder Initialization
-    [mealCostInput, surchargeRateInput, desiredTipPctInput, tipOverrideInput, partySizeInput].forEach(input => {
-        input.addEventListener('input', calculateBill);
-    });
-
-    // Initial Engine Bootstrap Execution Trigger
+    // Device Palette Theme Management Configuration Core
+    function initTheme() { const activeTheme = localStorage.getItem('appThemeConfig') || 'light'; document.documentElement.setAttribute('data-theme', activeTheme); }
     initTheme();
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', nextTheme); localStorage.setItem('appThemeConfig', nextTheme);
+    });
+
+    historyToggle.addEventListener('click', () => { if (window.innerWidth <= 768) { const isCollapsed = historyCard.classList.toggle('collapsed'); historyToggle.setAttribute('aria-expanded', !isCollapsed); } });
+    [mealCostInput, surchargeRateInput, desiredTipPctInput, tipOverrideInput, partySizeInput].forEach(input => { input.addEventListener('input', calculateBill); });
     renderHistoryUI();
-</script>
-<script>
-    // Injects the combined text into the tab and the webpage subtitle
-    document.getElementById("app-title").textContent = FULL_TITLE;
-    document.getElementById("version-subtitle").textContent = FULL_TITLE;
-</script>
-
-
-<!-- GLOBAL MODAL: USER GUIDE & QUICK REFERENCE -->
-<div id="helpModal" class="modal-overlay" aria-hidden="true" role="dialog">
-    <div class="modal-card">
-        <div class="modal-header">
-            <h3>📖 User Guide & Quick Reference</h3>
-            <button id="closeModal" class="btn-close-modal" aria-label="Close user guide">&times;</button>
-        </div>
-        <div class="modal-body">
-            <p style="margin-top:0; color: var(--text-secondary); font-style: italic;">
-                Welcome to your Bill/TIP optimizer for single/multiple payers. This guide explains how to use the calculator's advanced rounding engines, custom shortcuts, and Waitstaff/Server TIP protection guardrails.
-            </p>
-
-            <h4>🚀 Quick Start Guide</h4>
-            <ul>
-                <li><strong>Open the App:</strong> Utilizes a URL to access GitHub which hosts the application (.html file). The application will open a fillable form running within your web browser.</li>
-                <li><strong>Enter the Meal Cost:</strong> Type the base receipt subtotal (Meal + Tax) into the Meal Cost box.</li>
-                <li><strong>Set the Rates:</strong> Adjust your Credit Card or Service fee percentage and target TIP percentage using the quick-select percentage buttons or simply typing in the desired TIP percentage.</li>
-                <li><strong>TIP MINIMUM:</strong> Optionally, enter the specific MINIMUM desired actual TIP amount. The ending TIP will never be less but may be more due to rounding.</li>
-                <li><strong>Split the Bill (Optional):</strong> Change the Number of People field to instantly divide the total.</li>
-                <li><strong>Log & Clear:</strong> Click Save History to log the receipt to your sidebar, then click Clear to wipe the board for your next meal.</li>
-            </ul>
-
-            <h4>🛠️ Inputs & Advanced Controls</h4>
-            <ul>
-                <li><strong>💳 Credit Card Surcharge Rate (Default 0.0%):</strong> Quick Presets: 1%, 2%, 3%. Math Behavior: This surcharge is dynamically applied to the combined subtotal of the food and the finalized tip, perfectly mirroring modern retail merchant processors.</li>
-                <li><strong>💰 Desired Tip Percentage (Default 18.0%):</strong> Prefilled on launch. Quick Presets: 15%, 18%, 20%. Math Behavior: Serves as your ideal baseline target. The rounding engine will dynamically pivot off this number to secure your whole-dollar totals.</li>
-                <li><strong>🛡️ Tip Override (Minimum Dollar Amount - Default $0):</strong> Acts as an unconditional cash floor for the server. Perfect for small bills (e.g., a $4 coffee where an 18% tip is only pennies, but you want to leave a flat $2), or if you prefer to tip a specific flat cash amount regardless of bill percentages.</li>
-                <li><strong>👥 Number of People (Split - Default 1):</strong> Dictates whether the calculator targets a whole-dollar Grand Total (Party Size = 1) or a whole-dollar Per-Person Share (Party Size > 1).</li>
-            </ul>
-
-            <h4>🔬 Protects Your Waitstaff/Server</h4>
-            <p style="color: var(--text-secondary); margin-bottom: 8px;">Traditional bill-splitting tools round down blindly, which aggressively shortchanges waitstaff as groups grow. This version introduces Tip Protection Layout Metrics:</p>
-            <ul>
-                <li><strong>🚫 The -1.0% Downside Variance Guardrail:</strong> When splitting, the application runs a trial calculation by rounding the individual share to the closest dollar. It then cross-checks what that round does to the server's tip percentage. If a downward round causes the Effective Tip Rate to drop more than 1.0% below your Desired Tip, the guardrail instantly overrides standard rounding and forces the calculation to round UP to the next whole dollar instead.</li>
-                <li><strong>🛑 The Override Floor Enforcement:</strong> If a downward round attempts to drop the total tip amount below the value specified in your Tip Override box, the calculator blocks the downward slide and forces an upward round to keep that cash floor fully locked.</li>
-            </ul>
-
-            <h4>⚡ Power-User Keyboard Shortcuts & Navigation</h4>
-            <p style="color: var(--text-secondary); margin-bottom: 4px;">Speed up data entry and navigate the app using built-in system tools:</p>
-            <table class="help-table">
-                <thead>
-                    <tr>
-                        <th>Control / Shortcut</th>
-                        <th>Action</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>HELP Button</strong> (or <strong>Esc Key</strong>)</td>
-                        <td>Toggle User Guide Window</td>
-                        <td>Tapping the header button opens this layout overlay panel. Pressing the Escape (Esc) key or tapping the blurred background dismisses it instantly.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Ctrl + K</strong> (or <strong>Cmd + K</strong>)</td>
-                        <td>Reset & Focus Workspace</td>
-                        <td>Instantly clears all data fields, sets defaults, and places your typing cursor directly inside the Meal Cost box.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Ctrl + S</strong> (or <strong>Cmd + S</strong>)</td>
-                        <td>Save History</td>
-                        <td>Commits your current calculation values to your persistent data ledger without needing to use your trackpad.</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h4>🗄️ Data Management & Portability</h4>
-            <ul>
-                <li><strong>⚙️ Unified Metadata Injection:</strong> Application name and build iterations are assigned to static global variables at the top of the script runtime and programmatically mounted to the document node trees, streamlining single-source code updates.</li>
-                <li><strong>💾 Persistent Local Storage:</strong> All saved receipts are committed straight to your browser's internal localStorage engine. They will safely survive browser refreshes, tab closures, and system restarts.</li>
-                <li><strong>📝 Smart Notes Field:</strong> The 5-line Notes description panel holds onto your text after you save. This allows you to log a transaction, tweak a number, and log it again without re-typing your text. To clear out your notes, simply click the global Clear button.</li>
-                <li><strong>📥 Exporting & Backups:</strong> At the bottom of your Saved History sidebar, use the file serialization utilities to download your logs via <strong>Export CSV</strong> (for Google Sheets/Excel) or <strong>Export JSON</strong> (structural backups). <strong>Clear All</strong> permanently clears your logs with a confirmation prompt.</li>
-                <li><strong>🖨️ Clean Print / PDF Formatting:</strong> Clicking Print / PDF activates a custom CSS media driver. It automatically strips away theme switchers, shortcut pills, stepper arrows, and the history sidebar, leaving you with a minimalist, clean, professional receipt layout ready to print or save as a PDF.</li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    // --- HELP MODAL OPERATIONAL LOGIC ENGINE ---
-    const helpModal = document.getElementById('helpModal');
-    const helpToggleBtn = document.getElementById('helpToggle');
-    const closeModalBtn = document.getElementById('closeModal');
-
-    // Verify all components exist before mounting click hooks
-    if (helpToggleBtn && helpModal && closeModalBtn) {
-        
-        // Open Modal Interaction Event
-        helpToggleBtn.addEventListener('click', function() {
-            helpModal.style.display = 'flex';
-            helpModal.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden'; // Freeze background scroll
-        });
-
-        // Close Modal via "X" Button Event
-        closeModalBtn.addEventListener('click', closeModal);
-
-        // Close Modal via Overlay Background Click Event
-        helpModal.addEventListener('click', function(event) {
-            if (event.target === helpModal) {
-                closeModal();
-            }
-        });
-    }
-
-    // Standardized Modal Close Utility Function
-    function closeModal() {
-        helpModal.style.display = 'none';
-        helpModal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = ''; // Unfreeze background scroll
-    }
-
-    // Keyboard Listener: Hit 'Escape' to dismiss help window box
-    window.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && helpModal && helpModal.style.display === 'flex') {
-            closeModal();
-        }
-    });
 });
 </script>
-
-
-    
-<script>
-// --- GLOBAL APPLICATION INJECTOR ENGINE ---
-document.addEventListener("DOMContentLoaded", function() {
-    
-    // 1. DYNAMIC VERSION INJECTION (From previous step)
-    // Combines your name and version variables and handles the title/subtitle drops
-    const APP_NAME = "Calc-TIP";
-    const APP_VERSION = "GROK v5c";
-    const FULL_TITLE = `${APP_NAME} ${APP_VERSION}`;
-
-    const titleEl = document.getElementById("app-title");
-    const subtitleEl = document.getElementById("version-subtitle");
-    
-    if (titleEl) titleEl.textContent = FULL_TITLE;
-    if (subtitleEl) subtitleEl.textContent = FULL_TITLE;
-
-    // 2. HELP MODAL OPERATIONAL INTERACTION LOGIC
-    const helpModal = document.getElementById('helpModal');
-    const helpToggleBtn = document.getElementById('helpToggle');
-    const closeModalBtn = document.getElementById('closeModal');
-
-    if (helpToggleBtn && helpModal && closeModalBtn) {
-        // Open Modal Interaction Event
-        helpToggleBtn.addEventListener('click', function() {
-            helpModal.style.display = 'flex';
-            helpModal.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden'; // Freeze main card background scroll
-        });
-
-        // Close Modal via "X" Button Event
-        closeModalBtn.addEventListener('click', closeModal);
-
-        // Close Modal via Overlay Background Click Event
-        helpModal.addEventListener('click', function(event) {
-            if (event.target === helpModal) {
-                closeModal();
-            }
-        });
-    }
-
-    function closeModal() {
-        helpModal.style.display = 'none';
-        helpModal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = ''; // Restore main card background scroll
-    }
-
-    // Keyboard Listener: Hit 'Escape' to dismiss help window box
-    window.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && helpModal && helpModal.style.display === 'flex') {
-            closeModal();
-        }
-    });
-});
-</script>
-
-    
 </body>
 </html>
