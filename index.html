@@ -921,7 +921,7 @@ document.addEventListener("DOMContentLoaded", function() {
         historyData.forEach((record) => {
             const item = document.createElement('div'); item.className = 'history-item';
             let notesHtml = record.notes ? `<div class="history-item-notes">${escapeHtml(record.notes)}</div>` : '';
-            let splitHtml = record.partySize > 1 ? `<div style="color:var(--brand-highlight);">Split [${record.partySize} ways]: $${record.splitShare} each</div>` : '';
+            let splitHtml = record.partySize > 1 ? `<div style="color:var(--brand-highlight);">Split [${record.partySize} ways]: ${record.splitShare} each</div>` : '';
             item.innerHTML = `<div class="history-item-header"><span>Total: ${record.total}</span><span style="font-weight:normal; font-size:11px; color:var(--text-muted);">${record.timestamp}</span></div><div>Meal: ${record.meal} | Tip: ${record.tip} (${record.effectiveTip})</div>${splitHtml}${notesHtml}`;
             historyList.appendChild(item);
         });
