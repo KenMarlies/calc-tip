@@ -4,9 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Dynamic Title Holder Node -->
-    <title id="app-title">Calc-TIP v5h</title>
+    <title id="app-title">Calc-TIP v5i</title>
+    
+    <!-- Top-Level Metadata Extraction Engine -->
+    <script>
+        (function() {
+            const rawTitle = document.getElementById("app-title") ? document.getElementById("app-title").textContent.trim() : "Calc-TIP v5h";
+            const spaceIdx = rawTitle.indexOf(" ");
+            
+            // Expose globally so the rest of the application can use them
+            window.APP_NAME = spaceIdx !== -1 ? rawTitle.substring(0, spaceIdx) : rawTitle;
+            window.APP_VERSION = spaceIdx !== -1 ? rawTitle.substring(spaceIdx + 1) : "";
+            window.FULL_TITLE = rawTitle;
+        })();
+    </script>
+
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#3182ce">
+    
     <style>
         /* Modern Design System Tokens & Global Theming Core */
         :root {
@@ -726,15 +741,13 @@
 
 // Global Engine Bootstrap Handlers
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. UNIFIED METADATA VARIABLE INJECTION
-    const APP_NAME = "Calc-TIP";
-    const APP_VERSION = "v5h";
-    const FULL_TITLE = `${APP_NAME} ${APP_VERSION}`;
+    // 1. MOUNT PRE-EXTRACTED METADATA FROM TOP MODULE
     const titleEl = document.getElementById("app-title");
     const subtitleEl = document.getElementById("version-subtitle");
-    if (titleEl) titleEl.textContent = FULL_TITLE;
-    if (subtitleEl) subtitleEl.textContent = FULL_TITLE;
-
+    // Simply use the global variables prepared at the top of the file
+    if (titleEl) titleEl.textContent = window.FULL_TITLE;
+    if (subtitleEl) subtitleEl.textContent = window.FULL_TITLE;
+    
     // Component Registry Selector Mapping
     const mealCostInput = document.getElementById('mealCost');
     const surchargeRateInput = document.getElementById('surchargeRate');
