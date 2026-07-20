@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Dynamic Title Holder Node -->
-    <title id="app-title">Calc-TIP v5k</title>
+    <title id="app-title">Calc-TIP v5L</title>
 
     <!-- Top-Level Metadata Extraction Engine -->
     <script>
@@ -761,7 +761,7 @@
                 <li><strong>📝 Smart Notes Field:</strong> The 5-line Notes description panel holds onto your text after you save. This allows you to log a transaction, tweak a number, and log it again without re-typing your text. To clear out your notes, simply click the global Clear button.</li>
                 <li><strong>📥 Exporting & Backups:</strong> At the bottom of your Saved History sidebar, use the file serialization utilities to download your logs via <strong>Export CSV</strong> (for Google Sheets/Excel) or <strong>Export JSON</strong> (structural programming code tree payloads). <strong>Clear All</strong> permanently clears your saved profile logs with a safety confirmation prompt.</li>
                 <li><strong>🖨️ Clean Print / PDF Formatting:</strong> Clicking Print / PDF activates a custom CSS media driver. It automatically strips away theme switchers, shortcut pills, stepper arrows, and the history sidebar, leaving you with a minimalist, clean, professional receipt layout ready to print or save as a PDF.</li>
-                <li><strong>⚙️ Unified Metadata Injection:</strong> Application branding (`Calc-TIP`) and build iterations (`v5i`) are assigned to static global variables at the top of the file script runtime and programmatically mounted to the document node trees, streamlining single-source code updates.</li>
+                <li><strong>⚙️ Unified Metadata Injection:</strong> Application branding (`Calc-TIP`) and build iterations are assigned to static global variables at the top of the file script runtime and programmatically mounted to the document node trees, streamlining single-source code updates.</li>
             </ul>
         </div>
     </div>
@@ -774,10 +774,17 @@ document.addEventListener("DOMContentLoaded", function() {
     // 1. MOUNT PRE-EXTRACTED METADATA FROM TOP MODULE
     const titleEl = document.getElementById("app-title");
     const subtitleEl = document.getElementById("version-subtitle");
+    const helpNameEl = document.getElementById("help-app-name");
+    const helpVersionEl = document.getElementById("help-app-version");
+    
     // Simply use the global variables prepared at the top of the file
     if (titleEl) titleEl.textContent = window.FULL_TITLE;
     if (subtitleEl) subtitleEl.textContent = window.FULL_TITLE;
     
+    // Dynamically update the user guide text fields without hardcoded fallbacks
+    if (helpNameEl) helpNameEl.textContent = window.APP_NAME || "";
+    if (helpVersionEl) helpVersionEl.textContent = window.APP_VERSION || "";
+
     // Component Registry Selector Mapping
     const mealCostInput = document.getElementById('mealCost');
     const surchargeRateInput = document.getElementById('surchargeRate');
