@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- Dynamic Title Holder Node -->
-    <title id="app-title">Calc-TIP v5i</title>
+    <title id="app-title">Calc-TIP v5j</title>
 
     <!-- Top-Level Metadata Extraction Engine -->
     <script>
@@ -700,13 +700,12 @@
         </div>
         <div class="modal-body">
             <p style="margin-top:0; color: var(--text-secondary); font-style: italic;">
-                Welcome to your offline-first, group-optimized billing workspace. This guide explains how to use the calculator's advanced rounding engines, custom shortcuts, and server protection guardrails.
+                Welcome to your group-optimized bill tip/surcharge/split calculator. This guide explains how to use the calculator's advanced rounding engines, custom shortcuts, and server protection guardrails.
             </p>
-
             <h4>🚀 Quick Start Guide</h4>
             <ul>
                 <li><strong>Open the App:</strong> Double-click your saved .html file which will run within your web browser.</li>
-                <li><strong>Enter the Meal Cost:</strong> Type the base receipt subtotal (Meal + Tax) into the Meal Cost box. You can separate multiple items by a single space.</li>
+                <li><strong>Enter the Meal Cost:</strong> Type the base receipt subtotal (Meal + Tax) into the Meal Cost box. You can separate multiple items by a single space or use the "CALC" button for a robust calculator.</li>
                 <li><strong>Set the Rates:</strong> Adjust your credit card fee and target tip using the quick-select percentage buttons.</li>
                 <li><strong>Split the Bill (Optional):</strong> Change the Number of People field to instantly divide the total.</li>
                 <li><strong>Log & Clear:</strong> Click Save History to log the receipt to your sidebar, then click Clear to wipe the board for your next meal.</li>
@@ -722,6 +721,9 @@
 
             <h4>🔬 How Version 5g Protects Your Server</h4>
             <p style="color: var(--text-secondary); margin-bottom: 8px;">Traditional bill-splitting tools round down blindly, which aggressively shortchanges waitstaff as groups grow. Version 5g introduces Tip Protection Layout Metrics:</p>
+
+            <h4>🔬 How the calculator Protects Your Server's TIP%</h4>
+            <p style="color: var(--text-secondary); margin-bottom: 8px;">Traditional bill-splitting tools round down blindly, which aggressively shortchanges waitstaff as groups grow. This calculator introduces Tip Protection Metrics:</p>
             <ul>
                 <li><strong>🚫 The -1.0% Downside Variance Guardrail:</strong> When splitting, the application runs a trial calculation by rounding the individual share to the closest dollar. It then cross-checks what that round does to the server's tip percentage. If a downward round causes the Effective Tip Rate to drop more than 1.0% below your Desired Tip, the guardrail instantly overrides standard rounding and forces the calculation to round UP to the next whole dollar instead.</li>
                 <li><strong>🛑 The Override Floor Enforcement:</strong> If a downward round attempts to drop the total tip amount below the value specified in your Tip Override box, the calculator blocks the downward slide and forces an upward round to keep that cash floor fully locked.</li>
