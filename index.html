@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <!-- Dynamic Title Holder Node -->
-    <title id="app-title">Calc-TIP v5L</title>
-
-    <!-- Top-Level Metadata Extraction Engine -->
+    <title id="app-title"></title>
+        <!-- Top-Level Metadata Configuration Module -->
     <script>
         (function() {
-            const rawTitle = document.getElementById("app-title") ? document.getElementById("app-title").textContent.trim() : "Calc-TIP v5h";
-            const spaceIdx = rawTitle.indexOf(" ");
-            
-            // Expose globally so the rest of the application can use them
-            window.APP_NAME = spaceIdx !== -1 ? rawTitle.substring(0, spaceIdx) : rawTitle;
-            window.APP_VERSION = spaceIdx !== -1 ? rawTitle.substring(spaceIdx + 1) : "";
-            window.FULL_TITLE = rawTitle;
+            // EDIT ONLY THESE TWO VARIABLES FOR ALL FUTURE UPDATES
+            const CONFIG_NAME = "Calc-TIP";
+            const CONFIG_VERSION = "v5M";
+
+            // Expose globally so the rest of the application can use them independently
+            window.APP_NAME = CONFIG_NAME;
+            window.APP_VERSION = CONFIG_VERSION;
+            window.FULL_TITLE = `${CONFIG_NAME} ${CONFIG_VERSION}`;
         })();
     </script>
 
