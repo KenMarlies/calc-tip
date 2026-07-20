@@ -12,7 +12,7 @@
         (function() {
             // EDIT ONLY THESE TWO VARIABLES FOR ALL FUTURE UPDATES
             const CONFIG_NAME = "Calc-TIP";
-            const CONFIG_VERSION = "v5N";
+            const CONFIG_VERSION = "v5o";
 
             // Expose globally so the rest of the application can use them independently
             window.APP_NAME = CONFIG_NAME;
@@ -779,14 +779,13 @@ document.addEventListener("DOMContentLoaded", function() {
     const helpNameEl = document.getElementById("help-app-name");
     const helpVersionEl = document.getElementById("help-app-version");
     
-    // Simply use the global variables prepared at the top of the file
-    if (titleEl) titleEl.textContent = window.FULL_TITLE;
-    if (subtitleEl) subtitleEl.textContent = window.FULL_TITLE;
-    
-    // Dynamically update the user guide text fields without hardcoded fallbacks
-    if (helpNameEl) helpNameEl.textContent = window.APP_NAME || "";
-    if (helpVersionEl) helpVersionEl.textContent = window.APP_VERSION || "";
+    // Process all DOM metadata layout mountings upfront synchronously
+    if (titleEl && window.FULL_TITLE) titleEl.textContent = window.FULL_TITLE;
+    if (subtitleEl && window.FULL_TITLE) subtitleEl.textContent = window.FULL_TITLE;
+    if (helpNameEl && window.APP_NAME) helpNameEl.textContent = window.APP_NAME;
+    if (helpVersionEl && window.APP_VERSION) helpVersionEl.textContent = window.APP_VERSION;
 
+    
     // Component Registry Selector Mapping
     const mealCostInput = document.getElementById('mealCost');
     const surchargeRateInput = document.getElementById('surchargeRate');
